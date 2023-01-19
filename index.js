@@ -15,10 +15,9 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     try {
-        const test = client.db('techQuest').collection('tes');
+        // const test = client.db('techQuest').collection('test');
         const usersCollection = client.db('techQuest').collection('users');
         const recruiterJobPostsCollection = client.db('techQuest').collection('recruiterJobPosts');
-
 
         app.get("/allJobs", async (req, res) => {
             const result = await test.find({}).toArray();
@@ -31,14 +30,14 @@ async function run() {
             const query = {};
             const result = await recruiterJobPostsCollection.find(query).toArray();
             res.send(result);
-        })
+        });
 
         // post users
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
             res.send(result)
-        })
+        });
     }
     catch {
         e => {
@@ -47,7 +46,7 @@ async function run() {
     }
 }
 
-run().catch((e) => console.log("run function error..", e));
+run().catch((e) => console.error("run function error..", e));
 
 app.get("/", (req, res) => {
   res.send("Tech Quest server is running...");
