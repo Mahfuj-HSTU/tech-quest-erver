@@ -46,7 +46,7 @@ async function run() {
     }
 }
 
-run().catch((e) => console.log("run function error..", e));
+run().catch((e) => console.error("run function error..", e));
 
 app.get("/", (req, res) => {
   res.send("Tech Quest server is running...");
