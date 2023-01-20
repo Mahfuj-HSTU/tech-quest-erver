@@ -20,10 +20,21 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const test = client.db("techQuest").collection("tes");
-    const allJobs = client.db("techQuest").collection("recruiterJobPosts");
+    const allJobsCollection = client
+      .db("techQuest")
+      .collection("recruiterJobPosts");
+
     app.get("/allJobs", async (req, res) => {
       const result = await test.find({}).toArray();
       // console.log(result);
+      res.send(result);
+    });
+
+    // Create post method for add job section
+    app.post("/alljobs", async (req, res) => {
+      const jobPostDetails = req.body;
+      const result = await allJobsCollection.insertOne(jobPostDetails);
+      console.log(result);
       res.send(result);
     });
   } catch {
