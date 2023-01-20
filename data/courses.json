@@ -1,0 +1,50 @@
+[
+	{
+		"id": "01",
+		"name": "Developing Mobile Apps",
+		"img": "https://cdn.acodez.in/wp-content/uploads/2022/03/What-is-a-mobile-app-feature-image.jpg",
+		"details": "According to Techopedia, a mobile app, or mobile application, is a type of application software designed to run on a mobile device, such as a smartphone or tablet computer. f you need a short CliffNote version, think of a mobile app as an extension for PC-based applications, only that it has limited capabilities and functions. Our development lifecycle complies with the overall process from the design phase to development, testing, and deployment to play store. We also support by giving maintenance for the projects post-completion. We as a leading Android App developers in Chennai as worked with various industries including Ecommerce, Automobile, Healthcare, Education, and more. If you have an idea to create an android app then feel free to contact us.",
+		"price": "$50",
+		"inst": "Jhankar Mahbub, Mir Hossain, Aziul Hakim Milton, Farhan Ahmed"
+	},
+	{
+		"id": "02",
+		"name": "Learn HTML and CSS",
+		"img": "https://jogjaweb.co.id/wp-content/uploads/2016/12/173756_8a1e_2.jpg",
+		"details": "Regardless of what your profession is, HTML and CSS are great skills to have. And even a little knowledge of these languages can make a big difference in your career. Just like having the ability to speak a foreign language, this sort of skill is helpful in almost all professions. HTML and CSS are the foundational languages of the web. HTML is a markup language that is used for developing web pages. CSS is a language that defines the presentation of a document written in HTML. At Smarther, we do develop custom web design and development services with all latest technologies. With over 8+ years of experience in website development,",
+		"price": "$25",
+		"inst": "Jhankar Mahbub, Mir Hossain, Aziul Hakim Milton, Farhan Ahmed"
+	},
+	{
+		"id": "03",
+		"name": "Learn JavaScript",
+		"img": "https://1.bp.blogspot.com/-pdqcVeIQp64/XDX7TzdRdcI/AAAAAAAAM8E/ZmGuB6caZqIGmEflGHcj3zgXJJrmqRLdgCLcBGAs/w1200-h630-p-k-no-nu/Free%2BCourses%2Bto%2Blearn%2BJavaScript.jpg",
+		"details": "If you are looking for a job or starting your own website, learning JavaScript is the right decision. In today's world, I highly encourage people to learn to code and at least know to build a web application and mobile application on their own, and by learning JavaScript, you can hit these two birds in one stone. Our experise in web technology have vast experience in developing ecommerce, corporate, food delivery and more. We also work with popular web Content Management System (CMS) like Wordpress, Megento and more to create custom web solution.",
+		"price": "$35",
+		"inst": "Jhankar Mahbub, Mir Hossain, Aziul Hakim Milton, Farhan Ahmed"
+	},
+	{
+		"id": "04",
+		"name": "Learn Python",
+		"img": "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200707215302/Best-Way-To-Start-Learning-Python-%E2%80%93-A-Complete-Roadmap.png",
+		"details": "The world’s fastest-growing and most popular programming language not just amongst software engineers but also amongst mathematicians, data analysts, scientists, accountants, network engineers, and even kids! because it’s a very beginner-friendly programming language. People from different disciplines use Python for a variety of different tasks, such as data analysis and visualization, artificial intelligence and Machine Learning, automation, etc. You can write Python scripts to automate a lot of boring tasks such as copying files and folders, renaming them, and uploading them to a server. So Python is not just used by software developers but also it is used by other professionals to automate their tasks and make their life easier. Python is a multi-purpose language, you can use Python to build web apps, mobile apps, and desktop applications as well as software testing and even hacking.",
+		"price": "$40",
+		"inst": "Jhankar Mahbub, Mir Hossain, Aziul Hakim Milton, Farhan Ahmed"
+	},
+	{
+		"id": "05",
+		"name": "Convert PSD to HTML",
+		"img": "https://www.htmlpanda.com/blog/wp-content/uploads/2014/01/Why-PSD-to-HTML.png",
+		"details": "For designing any new website template, the first step is to design it in Photoshop and then convert it into HTML for the web developers. Therefore, consistency in design is maintained, and the clients get to choose from multiple options. The tweaking of design can be done easily before converting it to HTML for web development. The steps for converting PSD to HTML using Bootstraps are very simple. First, you have to slice the layered PSD file containing the web template design. Then you have to download Bootstrap and unzip it. Create index.html and style.css for the template. In the index.html file, you have to initiate Bootstrap in the Head section, and you have to initiate JavaScript in Body section of index.html. Then you have to use the available component in Bootstrap in your HTML template.",
+		"price": "$30",
+		"inst": "Jhankar Mahbub, Mir Hossain, Aziul Hakim Milton, Farhan Ahmed"
+	},
+	{
+		"id": "06",
+		"name": "Learn React",
+		"img": "https://impressivewebs.s3.amazonaws.com/2019-08/react-course.jpg",
+		"details": "React is based on component-based architecture. You will have to divide the complete UI or JSX into reusable components. You will be creating different components for different tasks and these components will be fitted into the parent component. This parent component will be rendered to the user. Now the question is…what are the core concepts you should learn in ReactJS You will be using JSX syntax in ReactJS. The syntax of JSX is somewhere similar to HTML but keep in mind that it is different from plain HTML. Functional component, class component, and the difference between both of these. Learn to render the JSX elements. Show and hide elements depending on the conditions. Just like in JavaScript, you will handle events in React. Learn how to handle some common events such as onClick, onChange, and onSubmit",
+		"price": "$25",
+		"inst": "Jhankar Mahbub, Mir Hossain, Aziul Hakim Milton, Farhan Ahmed"
+	}
+]
