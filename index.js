@@ -20,16 +20,43 @@ const client = new MongoClient(uri, {
 });
 
 async function run() {
+    // try {
+    //     const test = client.db('techQuest').collection('test');
+       
+    //     const usersCollection = client.db('techQuest').collection('users');
+    //     const recruiterJobPostsCollection = client.db('techQuest').collection('recruiterJobPosts');
   try {
-    // const test = client.db('techQuest').collection('test');
+    const test = client.db('techQuest').collection('test');
     const usersCollection = client.db("techQuest").collection("users");
-    const recruiterJobPostsCollection = client
-      .db("techQuest")
-      .collection("recruiterJobPosts");
-    const applicationCollection = client
-      .db("techQuest")
-      .collection("applications");
+    const myJobs = client.db('techQuest').collection('myjobs');
+    const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
+    const applicationCollection = client.db("techQuest").collection("applications");
 
+        app.get("/allJobs", async (req, res) => {
+            const result = await test.find({}).toArray();
+            // console.log(result);
+            res.send(result);
+        });
+      
+
+        // my jobs 
+        app.get("/myjobs", async (req, res) => {
+            const email = req.query.email;
+            console.log(email);
+            const query = { email:email}
+            const jobs = await myJobs.find(query).toArray();
+            // console.log(result);
+            res.send(jobs);
+        });
+
+        // recruiter job posts
+
+        // Posts recruiters
+        app.get('/recruiterJobPosts', async (req, res) => {
+            const query = {};
+            const result = await recruiterJobPostsCollection.find(query).toArray();
+            res.send(result);
+        });
     app.get("/allJobs", async (req, res) => {
       const result = await test.find({}).toArray();
       // console.log(result);
