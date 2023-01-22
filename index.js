@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000;
 require("dotenv").config();
 
@@ -70,6 +70,16 @@ async function run() {
       res.send(result);
     });
 
+    // getting a specific job
+    app.get('/job-details/:id',async(req,res)=>{
+      const id = req.params.id;
+      console.log(id);
+      const filter = { _id: ObjectId(id)}
+      const result = await recruiterJobPostsCollection.findOne(filter);
+      console.log(result);
+      res.send(result);
+    })
+
     // post users
     app.post("/users", async (req, res) => {
       const user = req.body;
@@ -86,7 +96,6 @@ async function run() {
       res.send(result);
     });
 
-<<<<<<< HEAD
         // get recruiter
         // check buyer
         app.get( '/users/recruiter/:email', async ( req, res ) => {
@@ -109,13 +118,11 @@ async function run() {
         app.get( '/courses', ( req, res ) => {
             res.send( courses )
         } )
-=======
     // getting all application from db
     app.get("/applications", async (req, res) => {
       const result = await applicationCollection.find({}).toArray();
       res.send(result);
     });
->>>>>>> b28f54aabc2c06296367f06b00f25c1569df244c
 
     app.get("/courses", (req, res) => {
       res.send(courses);
