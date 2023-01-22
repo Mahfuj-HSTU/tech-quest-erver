@@ -20,20 +20,17 @@ const client = new MongoClient(uri, {
 });
 
 async function run() {
-    try {
-        const test = client.db('techQuest').collection('test');
-        const myJobs = client.db('techQuest').collection('myjobs');
-        const usersCollection = client.db('techQuest').collection('users');
-        const recruiterJobPostsCollection = client.db('techQuest').collection('recruiterJobPosts');
+    // try {
+    //     const test = client.db('techQuest').collection('test');
+       
+    //     const usersCollection = client.db('techQuest').collection('users');
+    //     const recruiterJobPostsCollection = client.db('techQuest').collection('recruiterJobPosts');
   try {
-    // const test = client.db('techQuest').collection('test');
+    const test = client.db('techQuest').collection('test');
     const usersCollection = client.db("techQuest").collection("users");
-    const recruiterJobPostsCollection = client
-      .db("techQuest")
-      .collection("recruiterJobPosts");
-    const applicationCollection = client
-      .db("techQuest")
-      .collection("applications");
+    const myJobs = client.db('techQuest').collection('myjobs');
+    const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
+    const applicationCollection = client.db("techQuest").collection("applications");
 
         app.get("/allJobs", async (req, res) => {
             const result = await test.find({}).toArray();
