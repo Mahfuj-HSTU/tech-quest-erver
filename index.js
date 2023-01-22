@@ -15,7 +15,8 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     try {
-        // const test = client.db('techQuest').collection('test');
+        const test = client.db('techQuest').collection('test');
+        const myJobs = client.db('techQuest').collection('myjobs');
         const usersCollection = client.db('techQuest').collection('users');
         const recruiterJobPostsCollection = client.db('techQuest').collection('recruiterJobPosts');
 
@@ -24,6 +25,19 @@ async function run() {
             // console.log(result);
             res.send(result);
         });
+      
+
+        // my jobs 
+        app.get("/myjobs", async (req, res) => {
+            const email = req.query.email;
+            console.log(email);
+            const query = { email:email}
+            const jobs = await myJobs.find(query).toArray();
+            // console.log(result);
+            res.send(jobs);
+        });
+
+        // recruiter job posts
 
         // Posts recruiters
         app.get('/recruiterJobPosts', async (req, res) => {
