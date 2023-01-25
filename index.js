@@ -86,7 +86,6 @@ async function run() {
       res.send(result);
     });
 
-<<<<<<< HEAD
         // get recruiter
         // check buyer
         app.get( '/users/recruiter/:email', async ( req, res ) => {
@@ -109,13 +108,11 @@ async function run() {
         app.get( '/courses', ( req, res ) => {
             res.send( courses )
         } )
-=======
     // getting all application from db
     app.get("/applications", async (req, res) => {
       const result = await applicationCollection.find({}).toArray();
       res.send(result);
     });
->>>>>>> b28f54aabc2c06296367f06b00f25c1569df244c
 
     app.get("/courses", (req, res) => {
       res.send(courses);
