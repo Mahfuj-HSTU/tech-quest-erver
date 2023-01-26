@@ -68,10 +68,10 @@ async function run() {
     // getting a specific job
     app.get("/job-details/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
+      // console.log(id);
       const filter = { _id: ObjectId(id) };
       const result = await recruiterJobPostsCollection.findOne(filter);
-      console.log(result);
+      // console.log(result);
       res.send(result);
     });
 
