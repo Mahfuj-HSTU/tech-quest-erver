@@ -36,7 +36,7 @@ async function run() {
     // my jobs
     app.get("/myjobs", async (req, res) => {
       const email = req.query.email;
-      console.log(email);
+      // console.log(email);
       const query = { email: email };
       const jobs = await myJobs.find(query).toArray();
       // console.log(result);
