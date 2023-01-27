@@ -20,7 +20,6 @@ const client = new MongoClient( uri, {
 
 async function run () {
   try {
-    const test = client.db( "techQuest" ).collection( "test" );
     const usersCollection = client.db( "techQuest" ).collection( "users" );
     const myJobs = client.db( "techQuest" ).collection( "myjobs" );
     const recruiterJobPostsCollection = client.db( "techQuest" ).collection( "recruiterJobPosts" );
@@ -43,13 +42,33 @@ async function run () {
       res.send( result );
     } );
 
+    // created a search query - it is not complete
+    app.get( "/search/:title", async ( req, res ) => {
+      // const title = req.query;
+      const title = req.params.title;
+      // const country = req.params.country;
+      //   console.log(title);
+      const filter = { $text: { $search: title } };
+      //   const result = await recruiterJobPostsCollection.find( { $text: { $search: "front"}} ).toArray();
+      const result = await recruiterJobPostsCollection.find( { jobTitle: title, } ).toArray();
+      //   console.log(result);
+      res.send( result );
+    } );
+
+    // Posts recruiters
+    app.get( "/recruiterJobPosts", async ( req, res ) => {
+      const query = {};
+      const result = await recruiterJobPostsCollection.find( query ).toArray();
+      res.send( result );
+    } );
+
     // getting a specific job
     app.get( "/job-details/:id", async ( req, res ) => {
       const id = req.params.id;
-      // console.log( id );
+      //   console.log( id );
       const filter = { _id: ObjectId( id ) };
       const result = await recruiterJobPostsCollection.findOne( filter );
-      console.log( result );
+      //   console.log( result );
       res.send( result );
     } );
 
