@@ -135,25 +135,27 @@ async function run() {
       const result = await applicationCollection.insertOne(application);
       res.send(result);
     });
+        // get recruiter
+        app.get( '/users/recruiter/:email', async ( req, res ) => {
+            const email = req.params.email
+            const query = { email }
+            // console.log( email );
+            const user = await usersCollection.findOne( query )
+            res.send( { isRecruiter: user?.role === 'recruiter' } )
+        } )
 
-    // get recruiter
-    app.get("/users/recruiter/:email", async (req, res) => {
-      const email = req.params.email;
-      const query = { email };
-      // console.log( email );
-      const user = await usersCollection.findOne(query);
-      res.send({ isRecruiter: user?.role === "recruiter" });
-    });
+        // check jobSeeker
+        app.get( '/users/jobSeeker/:email', async ( req, res ) => {
+            const email = req.params.email
+            const query = { email }
+            // console.log( email );
+            const user = await usersCollection.findOne( query )
+            res.send( { isJobSeeker: user?.role === 'jobSeeker' } )
+        } )
 
-    // check jobSeeker
-    app.get("/users/jobSeeker/:email", async (req, res) => {
-      const email = req.params.email;
-      const query = { email };
-      // console.log( email );
-      const user = await usersCollection.findOne(query);
-      res.send({ isJobSeeker: user?.role === "jobSeeker" });
-    });
-
+        app.get( '/courses', ( req, res ) => {
+            res.send( courses )
+        } )
     // getting all application from db
     app.get("/applications", async (req, res) => {
       const result = await applicationCollection.find({}).toArray();
