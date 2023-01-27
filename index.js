@@ -23,6 +23,9 @@ async function run() {
   try {
     const test = client.db("techQuest").collection("test");
     const usersCollection = client.db("techQuest").collection("users");
+    const allJobsCollection = client
+      .db("techQuest")
+      .collection("recruiterJobPosts");
     const myJobs = client.db("techQuest").collection("myjobs");
     const recruiterJobPostsCollection = client
       .db("techQuest")
@@ -37,6 +40,15 @@ async function run() {
       res.send(result);
     });
 
+    // Create post method for add job section
+    app.post("/alljobs", async (req, res) => {
+      const jobPostDetails = req.body;
+      const result = await allJobsCollection.insertOne(jobPostDetails);
+      console.log(result);
+      res.send(result);
+    });
+
+    // Posts recruiters
     // my jobs
     app.get("/myjobs", async (req, res) => {
       const email = req.query.email;
@@ -59,6 +71,22 @@ async function run() {
       // console.log(result);
       res.send(result);
     });
+
+      // post users
+      app.post("/users", async (req, res) => {
+        const user = req.body;
+        const result = await usersCollection.insertOne(user);
+        res.send(result);
+      });
+  
+      // storing job seekers application
+      app.post("/applications", async (req, res) => {
+        const application = req.body;
+        // console.log(application);
+        const result = await applicationCollection.insertOne(application);
+        // console.log(result);
+        res.send(result);
+      });
 
     // created a search query - it is not complete
     app.get("/search/:title", async (req, res) => {
