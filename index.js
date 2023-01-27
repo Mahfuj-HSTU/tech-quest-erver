@@ -20,30 +20,30 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    const usersCollection = client.db("techQuest").collection("users");
-    const allJobsCollection = client.db("techQuest").collection("recruiterJobPosts");
-    const myJobs = client.db("techQuest").collection("myjobs");
-    const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
-    const applicationCollection = client.db("techQuest").collection("applications");
+
+    const usersCollection = client.db( "techQuest" ).collection( "users" );
+    const allJobsCollection = client.db( "techQuest" ).collection( "recruiterJobPosts" );
+    const recruiterJobPostsCollection = client.db( "techQuest" ).collection( "recruiterJobPosts" );
+    const applicationCollection = client.db( "techQuest" ).collection( "applications" );
 
 
     // Create post method for add job section
     app.post("/alljobs", async (req, res) => {
       const jobPostDetails = req.body;
-      const result = await allJobsCollection.insertOne(jobPostDetails);
-      console.log(result);
-      res.send(result);
-    });
+      const result = await allJobsCollection.insertOne( jobPostDetails );
+      // console.log( result );
+      res.send( result );
+    } );
 
     // my jobs
     app.get("/myjobs", async (req, res) => {
       const email = req.query.email;
       // console.log( email );
       const query = { email: email };
-      const jobs = await myJobs.find(query).toArray();
-      // console.log(result);
-      res.send(jobs);
-    });
+      const jobs = await applicationCollection.find( query ).toArray();
+      // console.log( result );
+      res.send( jobs );
+    } );
 
     // recruiter job posts
     app.get("/recruiterJobPosts", async (req, res) => {
@@ -65,24 +65,24 @@ async function run() {
       // console.log(application);
       const result = await applicationCollection.insertOne(application);
       // console.log(result);
-      res.send(result);
-    });
+      res.send( result );
+    } );
 
     // post users
-    app.post("/users", async (req, res) => {
+    app.post( "/users", async ( req, res ) => {
       const user = req.body;
-      const result = await usersCollection.insertOne(user);
-      res.send(result);
-    });
+      const result = await usersCollection.insertOne( user );
+      res.send( result );
+    } );
 
     // storing job seekers application
-    app.post("/applications", async (req, res) => {
+    app.post( "/applications", async ( req, res ) => {
       const application = req.body;
       // console.log(application);
-      const result = await applicationCollection.insertOne(application);
+      const result = await applicationCollection.insertOne( application );
       // console.log(result);
-      res.send(result);
-    });
+      res.send( result );
+    } );
 
     // created a search query - it is not complete
     app.get("/search/:title", async (req, res) => {
