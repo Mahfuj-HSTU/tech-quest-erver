@@ -8,7 +8,6 @@ require( "dotenv" ).config();
 // middleware
 app.use( cors() );
 app.use( express.json() );
-
 const courses = require( "./data/courses.json" );
 
 const uri = `mongodb+srv://${ process.env.DB_USER }:${ process.env.DB_PASS }@cluster0.pl2ayam.mongodb.net/?retryWrites=true&w=majority`;
@@ -27,16 +26,10 @@ async function run () {
     const recruiterJobPostsCollection = client.db( "techQuest" ).collection( "recruiterJobPosts" );
     const applicationCollection = client.db( "techQuest" ).collection( "applications" );
 
-    app.get( "/allJobs", async ( req, res ) => {
-      const result = await test.find( {} ).toArray();
-      // console.log(result);
-      res.send( result );
-    } );
-
     // my jobs
     app.get( "/myjobs", async ( req, res ) => {
       const email = req.query.email;
-      console.log( email );
+      // console.log( email );
       const query = { email: email };
       const jobs = await myJobs.find( query ).toArray();
       // console.log(result);
@@ -50,23 +43,10 @@ async function run () {
       res.send( result );
     } );
 
-    app.get( "/allJobs", async ( req, res ) => {
-      const result = await test.find( {} ).toArray();
-      // console.log(result);
-      res.send( result );
-    } );
-
-    // Posts recruiters
-    app.get( "/recruiterJobPosts", async ( req, res ) => {
-      const query = {};
-      const result = await recruiterJobPostsCollection.find( query ).toArray();
-      res.send( result );
-    } );
-
     // getting a specific job
     app.get( "/job-details/:id", async ( req, res ) => {
       const id = req.params.id;
-      console.log( id );
+      // console.log( id );
       const filter = { _id: ObjectId( id ) };
       const result = await recruiterJobPostsCollection.findOne( filter );
       console.log( result );
