@@ -72,21 +72,21 @@ async function run() {
       res.send(result);
     });
 
-      // post users
-      app.post("/users", async (req, res) => {
-        const user = req.body;
-        const result = await usersCollection.insertOne(user);
-        res.send(result);
-      });
-  
-      // storing job seekers application
-      app.post("/applications", async (req, res) => {
-        const application = req.body;
-        // console.log(application);
-        const result = await applicationCollection.insertOne(application);
-        // console.log(result);
-        res.send(result);
-      });
+    // post users
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
+
+    // storing job seekers application
+    app.post("/applications", async (req, res) => {
+      const application = req.body;
+      // console.log(application);
+      const result = await applicationCollection.insertOne(application);
+      // console.log(result);
+      res.send(result);
+    });
 
     // created a search query - it is not complete
     app.get("/search/:title", async (req, res) => {
