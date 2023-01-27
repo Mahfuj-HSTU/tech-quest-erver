@@ -85,7 +85,6 @@ async function run() {
       // console.log(result);
       res.send(result);
     });
-
         // get recruiter
         // check buyer
         app.get( '/users/recruiter/:email', async ( req, res ) => {
