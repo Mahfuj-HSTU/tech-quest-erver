@@ -90,10 +90,20 @@ async function run() {
       const title = req.params.title;
       // const country = req.params.country;
       //   console.log(title);
-      const filter = { $text: { $search: title } };
-      //   const result = await recruiterJobPostsCollection.find( { $text: { $search: "front"}} ).toArray();
-      const result = await recruiterJobPostsCollection.find({ jobTitle: title, }).toArray();
-      //   console.log(result);
+      const filter = { $search: { title } };
+      const result = await recruiterJobPostsCollection.aggregate([
+        {
+          $search: {
+            index: 'job_title',
+            text: {
+              query: title,
+              path: {
+                'wildcard': '*'
+              }
+            }
+          }
+        }
+      ]).toArray();
       res.send(result);
     });
 
