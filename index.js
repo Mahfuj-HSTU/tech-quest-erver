@@ -144,22 +144,13 @@ async function run() {
       res.send(result);
     });
 
-    // get recruiter
-    app.get("/users/recruiter/:email", async (req, res) => {
+    // getting user to check role
+    app.get("/users/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
       // console.log( email );
       const user = await usersCollection.findOne(query);
-      res.send({ isRecruiter: user?.role === "recruiter" });
-    });
-
-    // check jobSeeker
-    app.get("/users/jobSeeker/:email", async (req, res) => {
-      const email = req.params.email;
-      const query = { email };
-      // console.log( email );
-      const user = await usersCollection.findOne(query);
-      res.send({ isJobSeeker: user?.role === "jobSeeker" });
+      res.send(user);
     });
 
     // getting all application from db
