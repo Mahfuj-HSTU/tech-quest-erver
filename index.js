@@ -24,19 +24,29 @@ async function run() {
     const allJobsCollection = client
       .db("techQuest")
       .collection("recruiterJobPosts");
-    const myJobs = client.db("techQuest").collection("myjobs");
     const recruiterJobPostsCollection = client
       .db("techQuest")
       .collection("recruiterJobPosts");
+    const myJobs = client.db("techQuest").collection("myjobs");
     const applicationCollection = client
       .db("techQuest")
       .collection("applications");
+    const test = client.db("techQuest").collection("test"); // created by jayem for testing
 
     // Create post method for add job section
     app.post("/alljobs", async (req, res) => {
       const jobPostDetails = req.body;
       const result = await allJobsCollection.insertOne(jobPostDetails);
-      console.log(result);
+      // console.log( result );
+      res.send(result);
+    });
+
+    // deleting job by id
+    app.delete("/delete-job/:id", async (req, res) => {
+      const id = req.params.id;
+      // console.log(id);
+      const filter = { _id: ObjectId(id) };
+      const result = await recruiterJobPostsCollection.deleteOne(filter);
       res.send(result);
     });
 
@@ -45,8 +55,8 @@ async function run() {
       const email = req.query.email;
       // console.log( email );
       const query = { email: email };
-      const jobs = await myJobs.find(query).toArray();
-      // console.log(result);
+      const jobs = await applicationCollection.find(query).toArray();
+      // console.log( result );
       res.send(jobs);
     });
 
@@ -70,6 +80,54 @@ async function run() {
       // console.log(application);
       const result = await applicationCollection.insertOne(application);
       // console.log(result);
+      res.send(result);
+    });
+
+    // created a search query - it is not complete
+    app.get("/search/:title", async (req, res) => {
+      // const title = req.query;
+      const title = req.params.title;
+      // const country = req.params.country;
+      //   console.log(title);
+      const filter = { $search: { title } };
+      const result = await recruiterJobPostsCollection
+        .aggregate([
+          {
+            $search: {
+              index: "job_title",
+              text: {
+                query: title,
+                path: {
+                  wildcard: "*",
+                },
+              },
+            },
+          },
+        ])
+        .toArray();
+      res.send(result);
+    });
+
+    // Posts recruiters
+    app.get("/recruiterJobPosts/:email", async (req, res) => {
+      const email = req.params.email;
+      let query = {};
+      if (email) {
+        query = { recruiterEmail: email };
+      }
+      // console.log(email);
+      // const filter = { recruiterEmail: email };
+      const result = await recruiterJobPostsCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    // getting a specific job
+    app.get("/job-details/:id", async (req, res) => {
+      const id = req.params.id;
+      //   console.log( id );
+      const filter = { _id: ObjectId(id) };
+      const result = await recruiterJobPostsCollection.findOne(filter);
+      //   console.log( result );
       res.send(result);
     });
 
