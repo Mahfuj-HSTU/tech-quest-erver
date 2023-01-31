@@ -54,29 +54,6 @@ async function run() {
       res.send(jobs);
     });
 
-    // recruiter job posts
-    // app.get("/recruiterJobPosts", async (req, res) => {
-    //   const query = {};
-    //   const result = await recruiterJobPostsCollection.find(query).toArray();
-    //   res.send(result);
-    // });
-
-    // post users
-    app.post("/users", async (req, res) => {
-      const user = req.body;
-      const result = await usersCollection.insertOne(user);
-      res.send(result);
-    });
-
-    // storing job seekers application
-    app.post("/applications", async (req, res) => {
-      const application = req.body;
-      // console.log(application);
-      const result = await applicationCollection.insertOne(application);
-      // console.log(result);
-      res.send(result);
-    });
-
     // post users
     app.post("/users", async (req, res) => {
       const user = req.body;
@@ -128,6 +105,7 @@ async function run() {
       const result = await recruiterJobPostsCollection.find(query).toArray();
       res.send(result);
     });
+
 
     app.delete('/recruiterJobPosts/:id', async (req, res) => {
       const id = req.params.id;
