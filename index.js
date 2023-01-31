@@ -32,6 +32,12 @@ async function run() {
       // console.log( result );
       res.send(result);
     });
+    
+    // deleting job by id
+    app.delete('/delete-job/:id', async(req, res)=>{
+      const id = req.params.id;
+      console.log(id);
+    })
 
     // my jobs
     app.get("/myjobs", async (req, res) => {
