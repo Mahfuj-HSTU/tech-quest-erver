@@ -27,7 +27,6 @@ async function run() {
     const recruiterJobPostsCollection = client
       .db("techQuest")
       .collection("recruiterJobPosts");
-    const myJobs = client.db("techQuest").collection("myjobs");
     const applicationCollection = client
       .db("techQuest")
       .collection("applications");
@@ -141,72 +140,17 @@ async function run() {
     // storing job seekers application
     app.post("/applications", async (req, res) => {
       const application = req.body;
-
-      const result = await applicationCollection.insertOne(application);
-
-      res.send(result);
-    });
-
-    // created a search query - it is not complete
-    app.get("/search/:title", async (req, res) => {
-      const title = req.params.title;
-
-      const filter = { $text: { $search: title } };
-
-      const result = await recruiterJobPostsCollection
-        .find({ jobTitle: title })
-        .toArray();
-
-      res.send(result);
-    });
-
-    // Posts recruiters
-    app.get("/recruiterJobPosts", async (req, res) => {
-      const query = {};
-      const result = await recruiterJobPostsCollection.find(query).toArray();
-      res.send(result);
-    });
-
-    // getting a specific job
-    app.get("/job-details/:id", async (req, res) => {
-      const id = req.params.id;
-      //   console.log( id );
-      const filter = { _id: ObjectId(id) };
-      const result = await recruiterJobPostsCollection.findOne(filter);
-      //   console.log( result );
-      res.send(result);
-    });
-
-    // post users
-    app.post("/users", async (req, res) => {
-      const user = req.body;
-      const result = await usersCollection.insertOne(user);
-      res.send(result);
-    });
-
-    // storing job seekers application
-    app.post("/applications", async (req, res) => {
-      const application = req.body;
       const result = await applicationCollection.insertOne(application);
       res.send(result);
     });
 
-    // get recruiter
-    app.get("/users/recruiter/:email", async (req, res) => {
+    // getting user to check role
+    app.get("/users/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
       // console.log( email );
       const user = await usersCollection.findOne(query);
-      res.send({ isRecruiter: user?.role === "recruiter" });
-    });
-
-    // check jobSeeker
-    app.get("/users/jobSeeker/:email", async (req, res) => {
-      const email = req.params.email;
-      const query = { email };
-      // console.log( email );
-      const user = await usersCollection.findOne(query);
-      res.send({ isJobSeeker: user?.role === "jobSeeker" });
+      res.send(user);
     });
 
     // getting all application from db
