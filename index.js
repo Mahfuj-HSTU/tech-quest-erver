@@ -83,24 +83,22 @@ async function run() {
     // storing job seekers application
     app.post("/applications", async (req, res) => {
       const application = req.body;
-      // console.log(application);
+
       const result = await applicationCollection.insertOne(application);
-      // console.log(result);
+
       res.send(result);
     });
 
     // created a search query - it is not complete
     app.get("/search/:title", async (req, res) => {
-      // const title = req.query;
       const title = req.params.title;
-      // const country = req.params.country;
-      //   console.log(title);
+
       const filter = { $text: { $search: title } };
-      //   const result = await recruiterJobPostsCollection.find( { $text: { $search: "front"}} ).toArray();
+
       const result = await recruiterJobPostsCollection
         .find({ jobTitle: title })
         .toArray();
-      //   console.log(result);
+
       res.send(result);
     });
 
