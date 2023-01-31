@@ -24,7 +24,7 @@ async function run() {
     const allJobsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const applicationCollection = client.db("techQuest").collection("applications");
-    const test = client.db("techQuest").collection("test");
+    const test = client.db("techQuest").collection("test"); // created by jayem for testing
     
 
     // Create post method for add job section
