@@ -24,6 +24,8 @@ async function run() {
     const allJobsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const applicationCollection = client.db("techQuest").collection("applications");
+    const test = client.db("techQuest").collection("test");
+    
 
     // Create post method for add job section
     app.post("/alljobs", async (req, res) => {
@@ -36,7 +38,10 @@ async function run() {
     // deleting job by id
     app.delete('/delete-job/:id', async(req, res)=>{
       const id = req.params.id;
-      console.log(id);
+      // console.log(id);
+      const filter = { _id: ObjectId(id)};
+      const result = await recruiterJobPostsCollection.deleteOne(filter);
+      res.send(result);
     })
 
     // my jobs
