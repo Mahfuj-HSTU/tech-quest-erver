@@ -20,11 +20,11 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-
     const usersCollection = client.db("techQuest").collection("users");
     const allJobsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const applicationCollection = client.db("techQuest").collection("applications");
+    const test = client.db("techQuest").collection("test"); // created by jayem for testing
 
 
     // Create post method for add job section
@@ -34,6 +34,15 @@ async function run() {
       // console.log( result );
       res.send(result);
     });
+
+    // deleting job by id
+    app.delete('/delete-job/:id', async (req, res) => {
+      const id = req.params.id;
+      // console.log(id);
+      const filter = { _id: ObjectId(id) };
+      const result = await recruiterJobPostsCollection.deleteOne(filter);
+      res.send(result);
+    })
 
     // my jobs
     app.get("/myjobs", async (req, res) => {
@@ -91,19 +100,21 @@ async function run() {
       // const country = req.params.country;
       //   console.log(title);
       const filter = { $search: { title } };
-      const result = await recruiterJobPostsCollection.aggregate([
-        {
-          $search: {
-            index: 'job_title',
-            text: {
-              query: title,
-              path: {
-                'wildcard': '*'
-              }
-            }
-          }
-        }
-      ]).toArray();
+      const result = await recruiterJobPostsCollection
+        .aggregate([
+          {
+            $search: {
+              index: "job_title",
+              text: {
+                query: title,
+                path: {
+                  wildcard: "*",
+                },
+              },
+            },
+          },
+        ])
+        .toArray();
       res.send(result);
     });
 
@@ -112,7 +123,7 @@ async function run() {
       const email = req.query.email;
       let query = {}
       if (email) {
-        query = { recruiterEmail: email }
+        query = { recruiterEmail: email };
       }
       const result = await recruiterJobPostsCollection.find(query).toArray();
       res.send(result);
@@ -149,22 +160,13 @@ async function run() {
       res.send(result);
     });
 
-    // get recruiter
-    app.get("/users/recruiter/:email", async (req, res) => {
+    // getting user to check role
+    app.get("/users/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
       // console.log( email );
       const user = await usersCollection.findOne(query);
-      res.send({ isRecruiter: user?.role === "recruiter" });
-    });
-
-    // check jobSeeker
-    app.get("/users/jobSeeker/:email", async (req, res) => {
-      const email = req.params.email;
-      const query = { email };
-      // console.log( email );
-      const user = await usersCollection.findOne(query);
-      res.send({ isJobSeeker: user?.role === "jobSeeker" });
+      res.send(user);
     });
 
     // getting all application from db
