@@ -42,6 +42,7 @@ async function run() {
 
     // deleting job by id
     app.delete("/delete-job/:id", async (req, res) => {
+
       const id = req.params.id;
       // console.log(id);
       const filter = { _id: ObjectId(id) };
@@ -57,13 +58,6 @@ async function run() {
       const jobs = await applicationCollection.find(query).toArray();
       // console.log( result );
       res.send(jobs);
-    });
-
-    // recruiter job posts
-    app.get("/recruiterJobPosts", async (req, res) => {
-      const query = {};
-      const result = await recruiterJobPostsCollection.find(query).toArray();
-      res.send(result);
     });
 
     // post users
@@ -108,17 +102,23 @@ async function run() {
     });
 
     // Posts recruiters
-    app.get("/recruiterJobPosts/:email", async (req, res) => {
-      const email = req.params.email;
-      let query = {};
+    app.get("/recruiterJobPosts", async (req, res) => {
+      const email = req.query.email;
+      let query = {}
       if (email) {
         query = { recruiterEmail: email };
       }
-      // console.log(email);
-      // const filter = { recruiterEmail: email };
       const result = await recruiterJobPostsCollection.find(query).toArray();
       res.send(result);
     });
+
+
+    app.delete('/recruiterJobPosts/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await recruiterJobPostsCollection.deleteOne(filter);
+      res.send(result);
+    })
 
     // getting a specific job
     app.get("/job-details/:id", async (req, res) => {
