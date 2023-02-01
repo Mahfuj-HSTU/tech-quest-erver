@@ -24,6 +24,7 @@ async function run() {
     const allJobsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const applicationCollection = client.db("techQuest").collection("applications");
+    const courseCollection = client.db("techQuest").collection("courses");
     const test = client.db("techQuest").collection("test"); // created by jayem for testing
     
 
@@ -41,6 +42,7 @@ async function run() {
       // console.log(id);
       const filter = { _id: ObjectId(id)};
       const result = await recruiterJobPostsCollection.deleteOne(filter);
+      // const result = await test.deleteOne(filter);
       res.send(result);
     })
 
@@ -58,6 +60,7 @@ async function run() {
     app.get("/recruiterJobPosts", async (req, res) => {
       const query = {};
       const result = await recruiterJobPostsCollection.find(query).toArray();
+      // const result = await test.find(query).toArray();
       res.send(result);
     });
 
@@ -155,14 +158,16 @@ async function run() {
     });
 
     // courses
-    app.get("/courses", (req, res) => {
+    app.get("/courses", async(req, res) => {
+      const courses = await courseCollection.find({}).toArray()
       res.send(courses);
     });
 
-    app.get("/courses/:id", (req, res) => {
+    app.get("/courses/:id", async(req, res) => {
       const id = req.params.id;
-      const selectedCourse = courses.find((course) => course.id === id);
-      res.send(selectedCourse);
+      const filter = { _id: ObjectId(id)}
+      const result = await courseCollection.findOne(filter);
+      res.send(result);
     });
   } catch {
     (e) => {
