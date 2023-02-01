@@ -21,15 +21,10 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const usersCollection = client.db("techQuest").collection("users");
-    const allJobsCollection = client
-      .db("techQuest")
-      .collection("recruiterJobPosts");
-    const recruiterJobPostsCollection = client
-      .db("techQuest")
-      .collection("recruiterJobPosts");
-    const applicationCollection = client
-      .db("techQuest")
-      .collection("applications");
+    const allJobsCollection = client.db("techQuest").collection("recruiterJobPosts");
+    const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
+    const applicationCollection = client.db("techQuest").collection("applications");
+    const courseCollection = client.db("techQuest").collection("courses");
     const test = client.db("techQuest").collection("test"); // created by jayem for testing
 
     // Create post method for add job section
@@ -47,6 +42,7 @@ async function run() {
       // console.log(id);
       const filter = { _id: ObjectId(id) };
       const result = await recruiterJobPostsCollection.deleteOne(filter);
+      // const result = await test.deleteOne(filter);
       res.send(result);
     });
 
@@ -58,6 +54,14 @@ async function run() {
       const jobs = await applicationCollection.find(query).toArray();
       // console.log( result );
       res.send(jobs);
+    });
+
+    // recruiter job posts
+    app.get("/recruiterJobPosts", async (req, res) => {
+      const query = {};
+      const result = await recruiterJobPostsCollection.find(query).toArray();
+      // const result = await test.find(query).toArray();
+      res.send(result);
     });
 
     // post users
@@ -159,16 +163,30 @@ async function run() {
       res.send(result);
     });
 
-    // courses
-    app.get("/courses", (req, res) => {
+    // getting all courses
+    app.get("/courses", async(req, res) => {
+      const courses = await courseCollection.find({}).toArray()
+      // const courses = await test.find({}).toArray()
       res.send(courses);
     });
 
-    app.get("/courses/:id", (req, res) => {
+    // getting a single course by id
+    app.get("/courses/:id", async(req, res) => {
       const id = req.params.id;
-      const selectedCourse = courses.find((course) => course.id === id);
-      res.send(selectedCourse);
+      const filter = { _id: ObjectId(id)}
+      const result = await courseCollection.findOne(filter);
+      // const result = await test.findOne(filter);
+      res.send(result);
     });
+
+    app.delete('/delete-course/:id', async(req,res)=>{
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id)}
+      const result = await courseCollection.deleteOne(filter);
+      // const result = await test.deleteOne(filter);
+      res.send(result);
+    })
+
   } catch {
     (e) => {
       console.error("error inside run function: ", e);
