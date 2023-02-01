@@ -26,7 +26,6 @@ async function run() {
     const applicationCollection = client.db("techQuest").collection("applications");
     const courseCollection = client.db("techQuest").collection("courses");
     const test = client.db("techQuest").collection("test"); // created by jayem for testing
-    
 
     // Create post method for add job section
     app.post("/alljobs", async (req, res) => {
@@ -35,16 +34,17 @@ async function run() {
       // console.log( result );
       res.send(result);
     });
-    
+
     // deleting job by id
-    app.delete('/delete-job/:id', async(req, res)=>{
+    app.delete("/delete-job/:id", async (req, res) => {
+
       const id = req.params.id;
       // console.log(id);
-      const filter = { _id: ObjectId(id)};
+      const filter = { _id: ObjectId(id) };
       const result = await recruiterJobPostsCollection.deleteOne(filter);
       // const result = await test.deleteOne(filter);
       res.send(result);
-    })
+    });
 
     // my jobs
     app.get("/myjobs", async (req, res) => {
@@ -106,17 +106,23 @@ async function run() {
     });
 
     // Posts recruiters
-    app.get("/recruiterJobPosts/:email", async (req, res) => {
-      const email = req.params.email;
-      let query = {};
+    app.get("/recruiterJobPosts", async (req, res) => {
+      const email = req.query.email;
+      let query = {}
       if (email) {
         query = { recruiterEmail: email };
       }
-      // console.log(email);
-      // const filter = { recruiterEmail: email };
       const result = await recruiterJobPostsCollection.find(query).toArray();
       res.send(result);
     });
+
+
+    app.delete('/recruiterJobPosts/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await recruiterJobPostsCollection.deleteOne(filter);
+      res.send(result);
+    })
 
     // getting a specific job
     app.get("/job-details/:id", async (req, res) => {
