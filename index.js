@@ -21,11 +21,16 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const usersCollection = client.db("techQuest").collection("users");
-    const allJobsCollection = client.db("techQuest").collection("recruiterJobPosts");
-    const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
-    const applicationCollection = client.db("techQuest").collection("applications");
+    const allJobsCollection = client
+      .db("techQuest")
+      .collection("recruiterJobPosts");
+    const recruiterJobPostsCollection = client
+      .db("techQuest")
+      .collection("recruiterJobPosts");
+    const applicationCollection = client
+      .db("techQuest")
+      .collection("applications");
     const test = client.db("techQuest").collection("test"); // created by jayem for testing
-
 
     // Create post method for add job section
     app.post("/alljobs", async (req, res) => {
@@ -36,13 +41,14 @@ async function run() {
     });
 
     // deleting job by id
-    app.delete('/delete-job/:id', async (req, res) => {
+    app.delete("/delete-job/:id", async (req, res) => {
+
       const id = req.params.id;
       // console.log(id);
       const filter = { _id: ObjectId(id) };
       const result = await recruiterJobPostsCollection.deleteOne(filter);
       res.send(result);
-    })
+    });
 
     // my jobs
     app.get("/myjobs", async (req, res) => {
