@@ -24,9 +24,8 @@ async function run () {
     const allJobsCollection = client.db( "techQuest" ).collection( "recruiterJobPosts" );
     const recruiterJobPostsCollection = client.db( "techQuest" ).collection( "recruiterJobPosts" );
     const applicationCollection = client.db( "techQuest" ).collection( "applications" );
-    const coursesCollection = client.db( "techQuest" ).collection( "courses" );
+    const courseCollection = client.db( "techQuest" ).collection( "courses" );
     const test = client.db( "techQuest" ).collection( "test" ); // created by jayem for testing
-
 
     // Create post method for add job section
     app.post( "/alljobs", async ( req, res ) => {
@@ -59,6 +58,7 @@ async function run () {
     app.get( "/recruiterJobPosts", async ( req, res ) => {
       const query = {};
       const result = await recruiterJobPostsCollection.find( query ).toArray();
+      // const result = await test.find(query).toArray();
       res.send( result );
     } );
 
@@ -104,17 +104,23 @@ async function run () {
     } );
 
     // Posts recruiters
-    app.get( "/recruiterJobPosts/:email", async ( req, res ) => {
-      const email = req.params.email;
-      let query = {};
+    app.get( "/recruiterJobPosts", async ( req, res ) => {
+      const email = req.query.email;
+      let query = {}
       if ( email ) {
         query = { recruiterEmail: email };
       }
-      // console.log(email);
-      // const filter = { recruiterEmail: email };
       const result = await recruiterJobPostsCollection.find( query ).toArray();
       res.send( result );
     } );
+
+
+    app.delete( '/recruiterJobPosts/:id', async ( req, res ) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId( id ) };
+      const result = await recruiterJobPostsCollection.deleteOne( filter );
+      res.send( result );
+    } )
 
     // getting a specific job
     app.get( "/job-details/:id", async ( req, res ) => {
@@ -161,20 +167,30 @@ async function run () {
       res.send( result );
     } );
 
-    // courses
+    // getting all courses
     app.get( "/courses", async ( req, res ) => {
-      const courses = await coursesCollection.find( {} ).toArray();
+      const courses = await courseCollection.find( {} ).toArray()
+      // const courses = await test.find({}).toArray()
       res.send( courses );
     } );
 
+    // getting a single course by id
     app.get( "/courses/:id", async ( req, res ) => {
       const id = req.params.id;
-      const filter = { _id: ObjectId( id ) };
-      const selectedCourse = await coursesCollection.findOne( filter );
-      // const selectedCourse = coursesCollection.find( ( course ) => course.id === id );
-      // console.log( selectedCourse );
-      res.send( selectedCourse );
+      const filter = { _id: ObjectId( id ) }
+      const result = await courseCollection.findOne( filter );
+      // const result = await test.findOne(filter);
+      res.send( result );
     } );
+
+    app.delete( '/delete-course/:id', async ( req, res ) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId( id ) }
+      const result = await courseCollection.deleteOne( filter );
+      // const result = await test.deleteOne(filter);
+      res.send( result );
+    } )
+
   } catch {
     ( e ) => {
       console.error( "error inside run function: ", e );
