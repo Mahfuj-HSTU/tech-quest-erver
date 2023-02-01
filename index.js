@@ -157,18 +157,30 @@ async function run() {
       res.send(result);
     });
 
-    // courses
+    // getting all courses
     app.get("/courses", async(req, res) => {
       const courses = await courseCollection.find({}).toArray()
+      // const courses = await test.find({}).toArray()
       res.send(courses);
     });
 
+    // getting a single course by id
     app.get("/courses/:id", async(req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id)}
       const result = await courseCollection.findOne(filter);
+      // const result = await test.findOne(filter);
       res.send(result);
     });
+
+    app.delete('/delete-course/:id', async(req,res)=>{
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id)}
+      const result = await courseCollection.deleteOne(filter);
+      // const result = await test.deleteOne(filter);
+      res.send(result);
+    })
+
   } catch {
     (e) => {
       console.error("error inside run function: ", e);
