@@ -21,9 +21,15 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const usersCollection = client.db("techQuest").collection("users");
-    const allJobsCollection = client.db("techQuest").collection("recruiterJobPosts");
-    const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
-    const applicationCollection = client.db("techQuest").collection("applications");
+    const allJobsCollection = client
+      .db("techQuest")
+      .collection("recruiterJobPosts");
+    const recruiterJobPostsCollection = client
+      .db("techQuest")
+      .collection("recruiterJobPosts");
+    const applicationCollection = client
+      .db("techQuest")
+      .collection("applications");
     const courseCollection = client.db("techQuest").collection("courses");
     const test = client.db("techQuest").collection("test"); // created by jayem for testing
 
@@ -37,7 +43,6 @@ async function run() {
 
     // deleting job by id
     app.delete("/delete-job/:id", async (req, res) => {
-
       const id = req.params.id;
       // console.log(id);
       const filter = { _id: ObjectId(id) };
@@ -108,7 +113,7 @@ async function run() {
     // Posts recruiters
     app.get("/recruiterJobPosts", async (req, res) => {
       const email = req.query.email;
-      let query = {}
+      let query = {};
       if (email) {
         query = { recruiterEmail: email };
       }
@@ -116,13 +121,12 @@ async function run() {
       res.send(result);
     });
 
-
-    app.delete('/recruiterJobPosts/:id', async (req, res) => {
+    app.delete("/recruiterJobPosts/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
       const result = await recruiterJobPostsCollection.deleteOne(filter);
       res.send(result);
-    })
+    });
 
     // getting a specific job
     app.get("/job-details/:id", async (req, res) => {
@@ -163,30 +167,45 @@ async function run() {
       res.send(result);
     });
 
+    // storing course one by one
+    app.post(
+      "/add-course/:title/:description/:instructor/:img/:price",
+      async (req, res) => {
+        const title = req.params.title;
+        const description = req.params.description;
+        const instructor = req.params.instructor;
+        const img = req.params.img;
+        const price = req.params.price;
+        // console.log(title,description,instructor,img);
+        const courseInfo = { title, description, instructor, img, price };
+        const result = await courseCollection.insertOne(courseInfo);
+        res.send(result);
+      }
+    );
+
     // getting all courses
-    app.get("/courses", async(req, res) => {
-      const courses = await courseCollection.find({}).toArray()
+    app.get("/courses", async (req, res) => {
+      const courses = await courseCollection.find({}).toArray();
       // const courses = await test.find({}).toArray()
       res.send(courses);
     });
 
     // getting a single course by id
-    app.get("/courses/:id", async(req, res) => {
+    app.get("/courses/:id", async (req, res) => {
       const id = req.params.id;
-      const filter = { _id: ObjectId(id)}
+      const filter = { _id: ObjectId(id) };
       const result = await courseCollection.findOne(filter);
       // const result = await test.findOne(filter);
       res.send(result);
     });
 
-    app.delete('/delete-course/:id', async(req,res)=>{
+    app.delete("/delete-course/:id", async (req, res) => {
       const id = req.params.id;
-      const filter = { _id: ObjectId(id)}
+      const filter = { _id: ObjectId(id) };
       const result = await courseCollection.deleteOne(filter);
       // const result = await test.deleteOne(filter);
       res.send(result);
-    })
-
+    });
   } catch {
     (e) => {
       console.error("error inside run function: ", e);
