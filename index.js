@@ -61,6 +61,26 @@ async function run() {
       res.send(result);
     });
 
+    // Update Users Profile
+    app.put('/users/:email', async (req, res) => {
+      const email = req.params.email;
+      const editProfile = req.body;
+      const { name, PresentAddress, ParmanentAddress, mobile } = editProfile;
+      // console.log(email, editProfile, PresentAddress);
+      const filter = { email };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          name,
+          PresentAddress,
+          ParmanentAddress,
+          mobile
+        }
+      }
+      const result = await usersCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+    });
+
     // storing job seekers application
     app.post("/applications", async (req, res) => {
       const application = req.body;
@@ -142,7 +162,7 @@ async function run() {
     app.get("/users/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
-      // console.log( email );
+      // console.log(email);
       const user = await usersCollection.findOne(query);
       res.send(user);
     });
