@@ -174,6 +174,22 @@ async function run () {
       res.send( result );
     } );
 
+    // storing course one by one
+    app.post(
+      "/add-course/:title/:description/:instructor/:img/:price",
+      async (req, res) => {
+        const title = req.params.title;
+        const description = req.params.description;
+        const instructor = req.params.instructor;
+        const img = req.params.img;
+        const price = req.params.price;
+        // console.log(title,description,instructor,img);
+        const courseInfo = { title, description, instructor, img, price };
+        const result = await courseCollection.insertOne(courseInfo);
+        res.send(result);
+      }
+    );
+
     // getting all courses
     app.get( "/courses", async ( req, res ) => {
       const courses = await courseCollection.find( {} ).toArray()
