@@ -55,9 +55,44 @@ async function run () {
       res.send( jobs );
     } );
 
+    // recruiter job posts
+    app.get( "/recruiterJobPosts", async ( req, res ) => {
+      const query = {};
+      const result = await recruiterJobPostsCollection.find( query ).toArray();
+      // const result = await test.find(query).toArray();
+      res.send( result );
+    } );
+
     app.get( "/jobSeekersCollection", async ( req, res ) => {
       const query = {};
       const result = await jobSeekersCollection.find( query ).toArray();
+      res.send( result );
+    } );
+
+    // post users
+    app.post( "/users", async ( req, res ) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne( user );
+      res.send( result );
+    } );
+
+    // Update Users Profile
+    app.put( '/users/:email', async ( req, res ) => {
+      const email = req.params.email;
+      const editProfile = req.body;
+      const { name, PresentAddress, ParmanentAddress, mobile } = editProfile;
+      // console.log(email, editProfile, PresentAddress);
+      const filter = { email };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          name,
+          PresentAddress,
+          ParmanentAddress,
+          mobile
+        }
+      }
+      const result = await usersCollection.updateOne( filter, updateDoc, options );
       res.send( result );
     } );
 
@@ -136,6 +171,13 @@ async function run () {
     app.post( "/users", async ( req, res ) => {
       const user = req.body;
       const result = await usersCollection.insertOne( user );
+      res.send( result );
+    } );
+
+    // storing job seekers application
+    app.post( "/applications", async ( req, res ) => {
+      const application = req.body;
+      const result = await applicationCollection.insertOne( application );
       res.send( result );
     } );
 
