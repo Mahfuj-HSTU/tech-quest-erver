@@ -20,12 +20,13 @@ const client = new MongoClient( uri, {
 
 async function run () {
   try {
-    const usersCollection = client.db( "techQuest" ).collection( "users" );
-    const allJobsCollection = client.db( "techQuest" ).collection( "recruiterJobPosts" );
-    const recruiterJobPostsCollection = client.db( "techQuest" ).collection( "recruiterJobPosts" );
-    const applicationCollection = client.db( "techQuest" ).collection( "applications" );
+    const usersCollection = client.db("techQuest").collection("users");
+    const allJobsCollection = client.db("techQuest").collection("recruiterJobPosts");
+    const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
+    const applicationCollection = client.db("techQuest").collection("applications");
+    const jobSeekersCollection = client.db("techQuest").collection("jobSeekersCollection");
     const courseCollection = client.db( "techQuest" ).collection( "courses" );
-    const test = client.db( "techQuest" ).collection( "test" ); // created by jayem for testing
+    const test = client.db("techQuest").collection("test"); // created by jayem for testing
 
     // Create post method for add job section
     app.post( "/alljobs", async ( req, res ) => {
@@ -61,6 +62,12 @@ async function run () {
       // const result = await test.find(query).toArray();
       res.send( result );
     } );
+    
+    app.get("/jobSeekersCollection", async (req, res) => {
+      const query = {};
+      const result = await jobSeekersCollection.find(query).toArray();
+      res.send(result);
+    });
 
     // post users
     app.post( "/users", async ( req, res ) => {
