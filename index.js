@@ -81,7 +81,7 @@ async function run() {
       res.send( jobs );
     } );
 
-    // getting a specific job
+    // getting a specific my job
     app.get("/applications/:id", async (req, res) => {
       const id = req.params.id;
       //   console.log( id );
