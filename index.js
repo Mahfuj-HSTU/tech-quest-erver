@@ -3,7 +3,9 @@ const app = express();
 const cors = require( "cors" );
 const { MongoClient, ServerApiVersion, ObjectId } = require( "mongodb" );
 const port = process.env.PORT || 5000;
-require( "dotenv" ).config();
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
+
 
 // middleware
 app.use( cors() );
@@ -18,7 +20,24 @@ const client = new MongoClient( uri, {
   serverApi: ServerApiVersion.v1,
 } );
 
-async function run () {
+function verifyJWT(req, res, next) {
+  const authHeader = req.headers.authorization;
+  console.log(authHeader);
+  if (!authHeader) {
+    return res.status(401).send({ message: "unauthorized access" });
+  }
+  const token = authHeader.split(" ")[1];
+  console.log(token);
+  jwt.verify(token, process.env.ACCESS_TOKEN, function (err, decoded) {
+    if (err) {
+      return res.status(403).send({ message: "forbidden access" });
+    }
+    req.decoded = decoded;
+    next();
+  });
+}
+
+async function run() {
   try {
     const usersCollection = client.db( "techQuest" ).collection( "users" );
     const allJobsCollection = client.db( "techQuest" ).collection( "recruiterJobPosts" );
@@ -46,9 +65,16 @@ async function run () {
     } )
 
     // my jobs
-    app.get( "/myjobs", async ( req, res ) => {
+    app.get("/myjobs", verifyJWT, async (req, res) => {
       const email = req.query.email;
-      // console.log( email );
+      const decodedEmail = req.decoded.email;
+      console.log(decodedEmail, email);
+      console.log(typeof decodedEmail, typeof email);
+
+      // if (email !== decodedEmail) {
+      //   return res.status(403).send({ message: "forbiden access" });
+      // }
+
       const query = { email: email };
       const jobs = await applicationCollection.find( query ).toArray();
       // console.log( result );
@@ -72,9 +98,10 @@ async function run () {
     // post users
     app.post( "/users", async ( req, res ) => {
       const user = req.body;
-      const result = await usersCollection.insertOne( user );
-      res.send( result );
-    } );
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+      console.log(result);
+    });
 
     // Update Users Profile
     app.put( '/users/:email', async ( req, res ) => {
@@ -181,6 +208,18 @@ async function run () {
       res.send( result );
     } );
 
+    app.get("/jwt", async (req, res) => {
+      const email = req.query.email;
+      console.log(email);
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      if (user) {
+        const token = jwt.sign({ email }, process.env.ACCESS_TOKEN);
+        return res.send({ accessToken: token });
+      }
+      console.log(user);
+      res.status(401).send({ accessToken: "" });
+    });
     // get all users
     app.get( '/users', async ( req, res ) => {
       const users = await usersCollection.find( {} ).toArray();
