@@ -313,10 +313,6 @@ app.get( "/", ( req, res ) => {
   res.send( "Tech Quest server is running..." );
 } );
 
-app.listen(port, () => {
-  console.log(`Tech Quest server is running on ${port}`);
-});
-
 app.listen( port, () => {
   console.log( `Tech Quest server is running on ${ port }` );
 } );
