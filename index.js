@@ -81,6 +81,16 @@ async function run() {
       res.send( jobs );
     } );
 
+    // getting a specific job
+    app.get("/applications/:id", async (req, res) => {
+      const id = req.params.id;
+      //   console.log( id );
+      const filter = { _id: ObjectId(id) };
+      const result = await applicationCollection.findOne(filter);
+        console.log( result );
+      res.send(result);
+    });
+
     // recruiter job posts
     app.get( "/recruiterJobPosts", async ( req, res ) => {
       const query = {};
@@ -302,6 +312,10 @@ run().catch( ( e ) => console.error( "run function error..", e ) );
 app.get( "/", ( req, res ) => {
   res.send( "Tech Quest server is running..." );
 } );
+
+app.listen(port, () => {
+  console.log(`Tech Quest server is running on ${port}`);
+});
 
 app.listen( port, () => {
   console.log( `Tech Quest server is running on ${ port }` );
