@@ -20,22 +20,22 @@ const client = new MongoClient( uri, {
   serverApi: ServerApiVersion.v1,
 } );
 
-function verifyJWT(req, res, next) {
-  const authHeader = req.headers.authorization;
-  console.log(authHeader);
-  if (!authHeader) {
-    return res.status(401).send({ message: "unauthorized access" });
-  }
-  const token = authHeader.split(" ")[1];
-  console.log(token);
-  jwt.verify(token, process.env.ACCESS_TOKEN, function (err, decoded) {
-    if (err) {
-      return res.status(403).send({ message: "forbidden access" });
-    }
-    req.decoded = decoded;
-    next();
-  });
-}
+// function verifyJWT(req, res, next) {
+//   const authHeader = req.headers.authorization;
+//   console.log(authHeader);
+//   if (!authHeader) {
+//     return res.status(401).send({ message: "unauthorized access" });
+//   }
+//   const token = authHeader.split(" ")[1];
+//   console.log(token);
+//   jwt.verify(token, process.env.ACCESS_TOKEN, function (err, decoded) {
+//     if (err) {
+//       return res.status(403).send({ message: "forbidden access" });
+//     }
+//     req.decoded = decoded;
+//     next();
+//   });
+// }
 
 async function run() {
   try {
@@ -65,7 +65,7 @@ async function run() {
     } )
 
     // my jobs
-    app.get("/myjobs", verifyJWT, async (req, res) => {
+    app.get("/myjobs", async (req, res) => {
       const email = req.query.email;
       const decodedEmail = req.decoded.email;
       console.log(decodedEmail, email);
@@ -140,7 +140,6 @@ async function run() {
       res.send( result );
     } );
 
-
     // created a search query - it is not complete
     app.get( "/search/:title", async ( req, res ) => {
       // const title = req.query;
@@ -165,15 +164,6 @@ async function run() {
         .toArray();
       res.send( result );
     } );
-
-
-    // // recruiter job posts
-    // app.get( "/recruiterJobPosts", async ( req, res ) => {
-    //   const query = {};
-    //   const result = await recruiterJobPostsCollection.find( query ).toArray();
-    //   // const result = await test.find(query).toArray();
-    //   res.send( result );
-    // } );
 
     // Posts recruiters
     app.get( "/recruiterJobPosts", async ( req, res ) => {
@@ -230,6 +220,7 @@ async function run() {
       console.log(user);
       res.status(401).send({ accessToken: "" });
     });
+    
     // get all users
     app.get( '/users', async ( req, res ) => {
       const users = await usersCollection.find( {} ).toArray();
@@ -248,9 +239,7 @@ async function run() {
     // getting user to check role
     app.get( "/users/:email", async ( req, res ) => {
       const email = req.params.email;
-      const query = { email };
-      // console.log( email );
-      const user = await usersCollection.findOne( query );
+      const user = await usersCollection.findOne( {email} );
       res.send( user );
     } );
 
