@@ -208,18 +208,19 @@ async function run() {
       res.send( result );
     } );
 
-    // app.get("/jwt", async (req, res) => {
-    //   const email = req.query.email;
-    //   console.log(email);
-    //   const query = { email: email };
-    //   const user = await usersCollection.findOne(query);
-    //   if (user) {
-    //     const token = jwt.sign({ email }, process.env.ACCESS_TOKEN);
-    //     return res.send({ accessToken: token });
-    //   }
-    //   console.log(user);
-    //   res.status(401).send({ accessToken: "" });
-    // });
+    app.get("/jwt", async (req, res) => {
+      const email = req.query.email;
+      console.log(email);
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      if (user) {
+        const token = jwt.sign({ email }, process.env.ACCESS_TOKEN);
+        return res.send({ accessToken: token });
+      }
+      console.log(user);
+      res.status(401).send({ accessToken: "" });
+    });
+    
     // get all users
     app.get( '/users', async ( req, res ) => {
       const users = await usersCollection.find( {} ).toArray();
