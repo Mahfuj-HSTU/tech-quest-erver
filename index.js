@@ -3,9 +3,7 @@ const app = express();
 const cors = require( "cors" );
 const { MongoClient, ServerApiVersion, ObjectId } = require( "mongodb" );
 const port = process.env.PORT || 5000;
-require("dotenv").config();
-const jwt = require("jsonwebtoken");
-
+require( "dotenv" ).config();
 
 // middleware
 app.use( cors() );
@@ -20,32 +18,14 @@ const client = new MongoClient( uri, {
   serverApi: ServerApiVersion.v1,
 } );
 
-// function verifyJWT(req, res, next) {
-//   const authHeader = req.headers.authorization;
-//   console.log(authHeader);
-//   if (!authHeader) {
-//     return res.status(401).send({ message: "unauthorized access" });
-//   }
-//   const token = authHeader.split(" ")[1];
-//   console.log(token);
-//   jwt.verify(token, process.env.ACCESS_TOKEN, function (err, decoded) {
-//     if (err) {
-//       return res.status(403).send({ message: "forbidden access" });
-//     }
-//     req.decoded = decoded;
-//     next();
-//   });
-// }
-
-async function run() {
+async function run () {
   try {
-    const usersCollection = client.db( "techQuest" ).collection( "users" );
-    const allJobsCollection = client.db( "techQuest" ).collection( "recruiterJobPosts" );
-    const recruiterJobPostsCollection = client.db( "techQuest" ).collection( "recruiterJobPosts" );
-    const applicationCollection = client.db( "techQuest" ).collection( "applications" );
-    const jobSeekersCollection = client.db( "techQuest" ).collection( "jobSeekersCollection" );
+    const usersCollection = client.db("techQuest").collection("users");
+    const allJobsCollection = client.db("techQuest").collection("recruiterJobPosts");
+    const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
+    const applicationCollection = client.db("techQuest").collection("applications");
     const courseCollection = client.db( "techQuest" ).collection( "courses" );
-    const test = client.db( "techQuest" ).collection( "test" ); // created by jayem for testing
+    const test = client.db("techQuest").collection("test"); // created by jayem for testing
 
     // Create post method for add job section
     app.post( "/alljobs", async ( req, res ) => {
@@ -65,31 +45,14 @@ async function run() {
     } )
 
     // my jobs
-    app.get("/myjobs", async (req, res) => {
+    app.get( "/myjobs", async ( req, res ) => {
       const email = req.query.email;
-      const decodedEmail = req.decoded.email;
-      console.log(decodedEmail, email);
-      console.log(typeof decodedEmail, typeof email);
-
-      // if (email !== decodedEmail) {
-      //   return res.status(403).send({ message: "forbiden access" });
-      // }
-
+      // console.log( email );
       const query = { email: email };
       const jobs = await applicationCollection.find( query ).toArray();
       // console.log( result );
       res.send( jobs );
     } );
-
-    // getting a specific my job
-    app.get("/applications/:id", async (req, res) => {
-      const id = req.params.id;
-      //   console.log( id );
-      const filter = { _id: ObjectId(id) };
-      const result = await applicationCollection.findOne(filter);
-        console.log( result );
-      res.send(result);
-    });
 
     // recruiter job posts
     app.get( "/recruiterJobPosts", async ( req, res ) => {
@@ -98,45 +61,29 @@ async function run() {
       // const result = await test.find(query).toArray();
       res.send( result );
     } );
+    
+    // all job seekers
 
-    app.get( "/jobSeekersCollection", async ( req, res ) => {
-      const query = {};
-      const result = await jobSeekersCollection.find( query ).toArray();
-      res.send( result );
-    } );
+    app.get("/jobSeekersCollection", async (req, res) => {
+      const query = {role: "jobSeeker"};
+      const result = await usersCollection.find(query).toArray();
+      res.send(result);
+    });
+    
 
     // post users
     app.post( "/users", async ( req, res ) => {
       const user = req.body;
-      const result = await usersCollection.insertOne(user);
-      res.send(result);
-      console.log(result);
-    });
-
-    // Update Users Profile
-    app.put( '/users/:email', async ( req, res ) => {
-      const email = req.params.email;
-      const editProfile = req.body;
-      const { name, PresentAddress, ParmanentAddress, mobile } = editProfile;
-      // console.log(email, editProfile, PresentAddress);
-      const filter = { email };
-      const options = { upsert: true };
-      const updateDoc = {
-        $set: {
-          name,
-          PresentAddress,
-          ParmanentAddress,
-          mobile
-        }
-      }
-      const result = await usersCollection.updateOne( filter, updateDoc, options );
+      const result = await usersCollection.insertOne( user );
       res.send( result );
     } );
 
     // storing job seekers application
     app.post( "/applications", async ( req, res ) => {
       const application = req.body;
+      // console.log(application);
       const result = await applicationCollection.insertOne( application );
+      // console.log(result);
       res.send( result );
     } );
 
@@ -227,19 +174,12 @@ async function run() {
       res.send( users )
     } )
 
-    // delete users
-    app.delete( '/users/:id', async ( req, res ) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId( id ) }
-      const result = await usersCollection.deleteOne( query );
-      // console.log( result )
-      res.send( result )
-    } )
-
     // getting user to check role
     app.get( "/users/:email", async ( req, res ) => {
       const email = req.params.email;
-      const user = await usersCollection.findOne( {email} );
+      const query = { email };
+      // console.log( email );
+      const user = await usersCollection.findOne( query );
       res.send( user );
     } );
 
@@ -248,22 +188,6 @@ async function run() {
       const result = await applicationCollection.find( {} ).toArray();
       res.send( result );
     } );
-
-    // storing course one by one
-    app.post(
-      "/add-course/:title/:description/:instructor/:img/:price",
-      async ( req, res ) => {
-        const title = req.params.title;
-        const description = req.params.description;
-        const instructor = req.params.instructor;
-        const img = req.params.img;
-        const price = req.params.price;
-        // console.log(title,description,instructor,img);
-        const courseInfo = { title, description, instructor, img, price };
-        const result = await courseCollection.insertOne( courseInfo );
-        res.send( result );
-      }
-    );
 
     // getting all courses
     app.get( "/courses", async ( req, res ) => {
