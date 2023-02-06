@@ -62,7 +62,7 @@ async function run () {
       res.send( result );
     } );
     
-    // all job seekers 
+    // all job seekers
 
     app.get("/jobSeekersCollection", async (req, res) => {
       const query = {role: "jobSeeker"};
