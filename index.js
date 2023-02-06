@@ -220,7 +220,7 @@ async function run() {
       console.log(user);
       res.status(401).send({ accessToken: "" });
     });
-    
+
     // get all users
     app.get( '/users', async ( req, res ) => {
       const users = await usersCollection.find( {} ).toArray();
@@ -281,6 +281,12 @@ async function run() {
       res.send( result );
     } );
 
+    app.post('/courses/payment/:id', async(req, res)=>{
+      const email = req.query;
+      console.log(email);
+    })
+
+    // delete a course from course collection by admin
     app.delete( '/delete-course/:id', async ( req, res ) => {
       const id = req.params.id;
       const filter = { _id: ObjectId( id ) }
