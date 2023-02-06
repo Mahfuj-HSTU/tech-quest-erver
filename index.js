@@ -24,7 +24,6 @@ async function run () {
     const allJobsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const applicationCollection = client.db("techQuest").collection("applications");
-    const jobSeekersCollection = client.db("techQuest").collection("jobSeekersCollection");
     const courseCollection = client.db( "techQuest" ).collection( "courses" );
     const test = client.db("techQuest").collection("test"); // created by jayem for testing
 
@@ -63,11 +62,14 @@ async function run () {
       res.send( result );
     } );
     
+    // all job seekers 
+
     app.get("/jobSeekersCollection", async (req, res) => {
-      const query = {};
-      const result = await jobSeekersCollection.find(query).toArray();
+      const query = {role: "jobSeeker"};
+      const result = await usersCollection.find(query).toArray();
       res.send(result);
     });
+    
 
     // post users
     app.post( "/users", async ( req, res ) => {
