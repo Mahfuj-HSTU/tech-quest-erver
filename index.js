@@ -25,6 +25,7 @@ async function run () {
     const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const applicationCollection = client.db("techQuest").collection("applications");
     const courseCollection = client.db( "techQuest" ).collection( "courses" );
+    const coursePaymentCollection = client.db( "techQuest" ).collection( "coursePayment" );
     const test = client.db("techQuest").collection("test"); // created by jayem for testing
 
     // Create post method for add job section
@@ -205,10 +206,17 @@ async function run () {
       res.send( result );
     } );
 
-    app.post('/courses/payment/:id', async(req, res)=>{
-      const email = req.query;
-      console.log(email);
-    })
+    // storing payment info including course details and buyer email
+    app.post('/courses/payment/:id/:email', async(req, res)=>{
+      const email = req.params.email;
+      const id = req.params.id;
+      const filter = { _id:ObjectId(id)}
+      const courseInfo = await courseCollection.findOne(filter);
+      const courseInfoMore = {...courseInfo, email}
+      const coursePayment = await coursePaymentCollection.insertOne(courseInfoMore);
+      // console.log(courseInfoMore);
+      res.send(coursePayment);
+    } );
 
     // delete a course from course collection by admin
     app.delete( '/delete-course/:id', async ( req, res ) => {
