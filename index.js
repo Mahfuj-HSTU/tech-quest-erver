@@ -82,13 +82,13 @@ async function run () {
     } );
 
     // deleting job by id
-    app.delete( '/delete-job/:id', async ( req, res ) => {
+    app.delete( "/delete-job/:id", async ( req, res ) => {
       const id = req.params.id;
       // console.log(id);
       const filter = { _id: ObjectId( id ) };
       const result = await recruiterJobPostsCollection.deleteOne( filter );
       res.send( result );
-    } )
+    } );
 
     // my jobs
     app.get( "/myjobs", async ( req, res ) => {
@@ -100,20 +100,29 @@ async function run () {
       res.send( jobs );
     } );
 
-
-    app.get( "/jobSeekersCollection", async ( req, res ) => {
+    // recruiter job posts
+    app.get( "/recruiterJobPosts", async ( req, res ) => {
       const query = {};
-      const result = await jobSeekersCollection.find( query ).toArray();
+      const result = await recruiterJobPostsCollection.find( query ).toArray();
+      // const result = await test.find(query).toArray();
+      res.send( result );
+    } );
+
+    // all job seekers
+    app.get( "/jobSeekersCollection", async ( req, res ) => {
+      const query = { role: "jobSeeker" };
+      const result = await usersCollection.find( query ).toArray();
       res.send( result );
     } );
 
     // storing job seekers application
     app.post( "/applications", async ( req, res ) => {
       const application = req.body;
+      // console.log(application);
       const result = await applicationCollection.insertOne( application );
+      // console.log(result);
       res.send( result );
     } );
-
 
     // created a search query - it is not complete
     app.get( "/search/:title", async ( req, res ) => {
@@ -143,7 +152,7 @@ async function run () {
     // Posts recruiters
     app.get( "/recruiterJobPosts", async ( req, res ) => {
       const email = req.query.email;
-      let query = {}
+      let query = {};
       if ( email ) {
         query = { recruiterEmail: email };
       }
@@ -151,13 +160,12 @@ async function run () {
       res.send( result );
     } );
 
-
-    app.delete( '/recruiterJobPosts/:id', async ( req, res ) => {
+    app.delete( "/recruiterJobPosts/:id", async ( req, res ) => {
       const id = req.params.id;
       const filter = { _id: ObjectId( id ) };
       const result = await recruiterJobPostsCollection.deleteOne( filter );
       res.send( result );
-    } )
+    } );
 
     // getting a specific job
     app.get( "/job-details/:id", async ( req, res ) => {
@@ -176,6 +184,19 @@ async function run () {
       res.send( result );
     } );
 
+    app.get( "/jwt", async ( req, res ) => {
+      const email = req.query.email;
+      console.log( email );
+      const query = { email: email };
+      const user = await usersCollection.findOne( query );
+      if ( user ) {
+        const token = jwt.sign( { email }, process.env.ACCESS_TOKEN );
+        return res.send( { accessToken: token } );
+      }
+      console.log( user );
+      res.status( 401 ).send( { accessToken: "" } );
+    } );
+
     // post users
     app.post( "/users", async ( req, res ) => {
       const user = req.body;
@@ -184,40 +205,10 @@ async function run () {
     } );
 
     // get all users
-    app.get( '/users', async ( req, res ) => {
+    app.get( "/users", async ( req, res ) => {
       const users = await usersCollection.find( {} ).toArray();
-      res.send( users )
-    } )
-
-
-    // Update Users Profile
-    app.put( '/users/:email', async ( req, res ) => {
-      const email = req.params.email;
-      const editProfile = req.body;
-      const { name, PresentAddress, ParmanentAddress, mobile } = editProfile;
-      // console.log(email, editProfile, PresentAddress);
-      const filter = { email };
-      const options = { upsert: true };
-      const updateDoc = {
-        $set: {
-          name,
-          PresentAddress,
-          ParmanentAddress,
-          mobile
-        }
-      }
-      const result = await usersCollection.updateOne( filter, updateDoc, options );
-      res.send( result );
+      res.send( users );
     } );
-
-    // delete users
-    app.delete( '/users/:id', async ( req, res ) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId( id ) }
-      const result = await usersCollection.deleteOne( query );
-      // console.log( result )
-      res.send( result )
-    } )
 
     // getting user to check role
     app.get( "/users/:email", async ( req, res ) => {
@@ -234,25 +225,25 @@ async function run () {
       res.send( result );
     } );
 
-    // storing course one by one
+    // storing a new course
     app.post(
-      "/add-course/:title/:description/:instructor/:img/:price",
+      "/add-course/:title/:desc/:instructor/:img/:price",
       async ( req, res ) => {
         const title = req.params.title;
-        const description = req.params.description;
+        const description = req.params.desc;
         const instructor = req.params.instructor;
         const img = req.params.img;
         const price = req.params.price;
-        // console.log(title,description,instructor,img);
-        const courseInfo = { title, description, instructor, img, price };
+        const courseInfo = { title, desc: description, instructor, img, price };
         const result = await courseCollection.insertOne( courseInfo );
-        res.send( result );
+        // console.log(result);
+        res.send( result )
       }
     );
 
     // getting all courses
     app.get( "/courses", async ( req, res ) => {
-      const courses = await courseCollection.find( {} ).toArray()
+      const courses = await courseCollection.find( {} ).toArray();
       // const courses = await test.find({}).toArray()
       res.send( courses );
     } );
@@ -260,15 +251,30 @@ async function run () {
     // getting a single course by id
     app.get( "/courses/:id", async ( req, res ) => {
       const id = req.params.id;
-      const filter = { _id: ObjectId( id ) }
+      const filter = { _id: ObjectId( id ) };
       const result = await courseCollection.findOne( filter );
       // const result = await test.findOne(filter);
       res.send( result );
     } );
 
-    app.delete( '/delete-course/:id', async ( req, res ) => {
+    // storing payment info including course details and buyer email
+    app.post( "/courses/payment/:id/:email", async ( req, res ) => {
+      const email = req.params.email;
       const id = req.params.id;
-      const filter = { _id: ObjectId( id ) }
+      const filter = { _id: ObjectId( id ) };
+      const courseInfo = await courseCollection.findOne( filter );
+      const courseInfoMore = { ...courseInfo, email };
+      const coursePayment = await coursePaymentCollection.insertOne(
+        courseInfoMore
+      );
+      // console.log(courseInfoMore);
+      res.send( coursePayment );
+    } );
+
+    // delete a course from course collection by admin
+    app.delete( "/delete-course/:id", async ( req, res ) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId( id ) };
       const result = await courseCollection.deleteOne( filter );
       // const result = await test.deleteOne(filter);
       res.send( result );

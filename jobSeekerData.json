@@ -1,63 +1,69 @@
 [
     {
-      "jobSeekerName": "Md Zahid Hasan",
-      "jobSeekerEmail": "zahid.business2002@gmail.com",
-      "jobSeekerImage": "",
-      "jobSeekerEducationalInstitute": "",
-      "jobSeekerTitle": "Front-End Developer",
-      "jobSeekerSkills": "React, Node.js, Express.js, MongoDB, Tailwind",
-      "jobSeekerlocation": "Comilla",
-      "jobSeekerExperience": "No Experience"
+      "name": "Md Zahid Hasan",
+      "email": "zahidjobSeekerbusiness2002@gmail.com",
+      "photoUrl": "https://i.pinimg.com/236x/a8/af/2a/a8af2a59ef716dcb75d9f9ea0487092a.jpg",
+      "institute": "",
+      "title": "Front-End Developer",
+      "skills": "React, NodejobSeekerjs, ExpressjobSeekerjs, MongoDB, Tailwind",
+      "address": "Comilla",
+      "experience": "No Experience",
+      "role" : "jobSeeker"
     },
     {
-      "jobSeekerName": "Asraf Uddin",
-      "jobSeekerEmail": "asraf.uddin4407@gmail.com",
-      "jobSeekerImage": "",
-      "jobSeekerTitle": "Full Stack Developer",
-      "jobSeekerEducationalInstitute": "Chittagong University",
-      "jobSeekerSkills": "React, Node.js, Express.js, MongoDB, Tailwind",
-      "jobSeekerlocation": "Chattogram",
-      "jobSeekerExperience": "No Experience"
+      "name": "Asraf Uddin",
+      "email": "asrafjobSeekeruddin4407@gmail.com",
+      "photoUrl": "https://i.pinimg.com/236x/1e/57/24/1e572440202114f217b39e3488942cfa.jpg",
+      "title": "Full Stack Developer",
+      "institute": "Chittagong University",
+      "skills": "React, NodejobSeekerjs, ExpressjobSeekerjs, MongoDB, Tailwind",
+      "address": "Chattogram",
+      "experience": "No Experience",
+      "role" : "jobSeeker"
     },
     {
-      "jobSeekerName": "Siamur Rahman",
-      "jobSeekerEmail": "siamurrahman50@gmail.com",
-      "jobSeekerImage": "",
-      "jobSeekerTitle": "Full Stack Developer",
-      "jobSeekerEducationalInstitute": "",
-      "jobSeekerSkills": "React, Node.js, Express.js, MongoDB, Tailwind",
-      "jobSeekerlocation": "Dhaka",
-      "jobSeekerExperience": "No Experience"
+      "name": "Siamur Rahman",
+      "email": "siamurrahman50@gmail.com",
+      "photoUrl": "https://i.pinimg.com/564x/8e/be/e1/8ebee1c08c7953ea342e82adcf8469e9.jpg",
+      "title": "Full Stack Developer",
+      "institute": "",
+      "skills": "React, NodejobSeekerjs, ExpressjobSeekerjs, MongoDB, Tailwind",
+      "address": "Dhaka",
+      "experience": "No Experience",
+      "role" : "jobSeeker"
     },
     {
-      "jobSeekerName": "Mahfujur Rahman",
-      "jobSeekerEmail": "rmahfujur16@gmail.com",
-      "jobSeekerImage": "",
-      "jobSeekerTitle": "Full Stack Developer",
-      "jobSeekerEducationalInstitute": "HSTU",
-      "jobSeekerSkills": "React, Node.js, Express.js, MongoDB, Tailwind",
-      "jobSeekerlocation": "Dinajpur",
-      "jobSeekerExperience": "1 year"
+      "name": "Mahfujur Rahman",
+      "email": "rmahfujur16@gmail.com",
+      "photoUrl": "https://i.pinimg.com/564x/65/8e/4e/658e4eef6027fe5cfbd580b21d10fc1e.jpg",
+      "title": "Full Stack Developer",
+      "institute": "HSTU",
+      "skills": "React, NodejobSeekerjs, ExpressjobSeekerjs, MongoDB, Tailwind",
+      "address": "Dinajpur",
+      "experience": "1 year",
+      "role" : "jobSeeker"
     },
     {
-      "jobSeekerName": "Omar Faruque Rahat",
-      "jobSeekerEmail": "rahatomarfaruque@gmail.com",
-      "jobSeekerImage": "",
-      "jobSeekerTitle": "Front-End Developer",
-      "jobSeekerEducationalInstitute": "IIUC",
-      "jobSeekerSkills": "React, Node.js, Express.js, MongoDB, Tailwind",
-      "jobSeekerlocation": "Chattogram",
-      "jobSeekerExperience": "No Experience"
+      "name": "Omar Faruque Rahat",
+      "email": "rahatomarfaruque@gmail.com",
+      "photoUrl": "https://i.pinimg.com/564x/96/fd/16/96fd1617accd9be498633f5bc7f6b1ea.jpg",
+      "title": "Front-End Developer",
+      "institute": "IIUC",
+      "skills": "React, NodejobSeekerjs, ExpressjobSeekerjs, MongoDB, Tailwind",
+      "address": "Chattogram",
+      "experience": "No Experience",
+      "role" : "jobSeeker"
     },
     {
-      "jobSeekerName": "Asif Mahmud Jayem",
-      "jobSeekerEmail": "csejayem19@gmail.com",
-      "jobSeekerImage": "",
-      "jobSeekerTitle": "Full Stack Developer",
-      "jobSeekerEducationalInstitute": "National University",
-      "jobSeekerSkills": "React, Node.js, Express.js, MongoDB, Redux, Tailwind",
-      "jobSeekerlocation": "Dhaka",
-      "jobSeekerExperience": "No Experience"
+      "name": "Asif Mahmud Jayem",
+      "email": "csejayem19@gmail.com",
+      "photoUrl": "https://i.pinimg.com/564x/47/3a/17/473a173f170c74bd4954583e756944a9.jpg",
+      "title": "Full Stack Developer",
+      "institute": "National University",
+      "skills": "React, NodejobSeekerjs, ExpressjobSeekerjs, MongoDB, Redux, Tailwind",
+      "address": "Dhaka",
+      "experience": "No Experience",
+      "role" : "jobSeeker"
     }
     
     
