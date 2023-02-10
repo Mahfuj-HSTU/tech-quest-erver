@@ -92,7 +92,7 @@ async function run() {
     const test = client.db("techQuest").collection("test"); // created by jayem for testing
 
     // Create post method for add job section
-    app.post("/alljobs", async (req, res) => {
+    app.post("/all-jobs", async (req, res) => {
       const jobPostDetails = req.body;
       const result = await allJobsCollection.insertOne(jobPostDetails);
       // console.log( result );
