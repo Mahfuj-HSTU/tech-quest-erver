@@ -176,6 +176,44 @@ async function run () {
       const result = await applicationCollection.insertOne( application );
       res.send( result );
     } );
+    
+    // Collect Applicant for Recruiter
+    app.get('/applicant/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { "job._id": id };
+      const applicant = await applicationCollection.find(query).toArray();
+      res.send(applicant)
+    })
+    
+    // notified recruiter
+    app.get('/applicant', async (req, res) => {
+      const email = req.query.email;
+      const query = { "job.recruiterEmail": email };
+      const applicants = await applicationCollection.find(query).toArray();
+      const applicants2 = applicants.filter(app => app.notification === 'true')
+      // applicants.forEach(applicant=>{
+      //   const trueApplicants=applicants.filter(app => app.notification === 'true')
+      // })
+      res.send(applicants2)
+    })
+    
+    / Check notification
+    app.put('/applicant/:email', async (req, res) => {
+      const email = req.params.email;
+      const filter = { "job.recruiterEmail": email };
+      // const applicants = await applicationCollection.find(query).toArray();
+      // const filter = applicants.filter(app => app.notification === 'true')
+      const options = { projection: { notification: "true" } };
+      // console.log(options)
+      const updateDoc = {
+        $set: {
+          notification: 'false'
+}
+      }
+      const result = await applicationCollection.updateMany(filter, updateDoc, options);
+
+      res.send(result)
+    })
 
     // app.get( "/jwt", async ( req, res ) => {
     //   const email = req.query.email;
