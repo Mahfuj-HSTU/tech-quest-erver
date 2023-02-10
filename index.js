@@ -1,11 +1,12 @@
+require( "dotenv" ).config();
 const express = require( "express" );
 const app = express();
+const port = process.env.PORT || 8000;
 const cors = require( "cors" );
 const mongoose = require( 'mongoose' );
 const multer = require( 'multer' );
 const { MongoClient, ServerApiVersion, ObjectId, CURSOR_FLAGS } = require( "mongodb" );
-const port = process.env.PORT || 5000;
-require( "dotenv" ).config();
+
 const mediaController = require( './controllers/mediaController' )
 const fs = require( 'fs' )
 const path = require( 'path' )
@@ -100,14 +101,6 @@ async function run () {
       res.send( jobs );
     } );
 
-    // recruiter job posts
-    app.get( "/recruiterJobPosts", async ( req, res ) => {
-      const query = {};
-      const result = await recruiterJobPostsCollection.find( query ).toArray();
-      // const result = await test.find(query).toArray();
-      res.send( result );
-    } );
-
     // all job seekers
     app.get( "/jobSeekersCollection", async ( req, res ) => {
       const query = { role: "jobSeeker" };
@@ -149,7 +142,7 @@ async function run () {
       res.send( result );
     } );
 
-    // Posts recruiters
+    // recruiter job posts
     app.get( "/recruiterJobPosts", async ( req, res ) => {
       const email = req.query.email;
       let query = {};
@@ -184,18 +177,18 @@ async function run () {
       res.send( result );
     } );
 
-    app.get( "/jwt", async ( req, res ) => {
-      const email = req.query.email;
-      console.log( email );
-      const query = { email: email };
-      const user = await usersCollection.findOne( query );
-      if ( user ) {
-        const token = jwt.sign( { email }, process.env.ACCESS_TOKEN );
-        return res.send( { accessToken: token } );
-      }
-      console.log( user );
-      res.status( 401 ).send( { accessToken: "" } );
-    } );
+    // app.get( "/jwt", async ( req, res ) => {
+    //   const email = req.query.email;
+    //   console.log( email );
+    //   const query = { email: email };
+    //   const user = await usersCollection.findOne( query );
+    //   if ( user ) {
+    //     const token = jwt.sign( { email }, process.env.ACCESS_TOKEN );
+    //     return res.send( { accessToken: token } );
+    //   }
+    //   console.log( user );
+    //   res.status( 401 ).send( { accessToken: "" } );
+    // } );
 
     // post users
     app.post( "/users", async ( req, res ) => {
@@ -215,7 +208,9 @@ async function run () {
       const email = req.params.email;
       const query = { email };
       // console.log( email );
+      // console.log( query );
       const user = await usersCollection.findOne( query );
+      // console.log( user )
       res.send( user );
     } );
 
@@ -226,8 +221,7 @@ async function run () {
     } );
 
     // storing a new course
-    app.post(
-      "/add-course/:title/:desc/:instructor/:img/:price",
+    app.post( "/add-course/:title/:desc/:instructor/:img/:price",
       async ( req, res ) => {
         const title = req.params.title;
         const description = req.params.desc;
@@ -244,7 +238,7 @@ async function run () {
     // getting all courses
     app.get( "/courses", async ( req, res ) => {
       const courses = await courseCollection.find( {} ).toArray();
-      // const courses = await test.find({}).toArray()
+      // console.log( courses )
       res.send( courses );
     } );
 
