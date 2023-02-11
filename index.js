@@ -8,7 +8,7 @@ const port = process.env.PORT || 5000;
 require( "dotenv" ).config();
 const mediaController = require( './controllers/mediaController' )
 const fs = require( 'fs' )
-const path = require( 'path' )
+const path = require( 'path' );
 
 const storage = multer.diskStorage( {
   destination: function ( req, file, cb ) {
