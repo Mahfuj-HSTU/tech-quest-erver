@@ -290,7 +290,7 @@ async function run() {
         const instructor = req.params.instructor;
         const img = req.params.img;
         const price = req.params.price;
-        const courseInfo = { title, desc: description, instructor, img, price };
+        const courseInfo = { title, description, instructor, img, price };
         const result = await courseCollection.insertOne(courseInfo);
         // console.log(result);
         res.send(result)
