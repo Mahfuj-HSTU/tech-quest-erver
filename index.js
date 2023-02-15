@@ -38,47 +38,47 @@ const client = new MongoClient(uri, {
 // }
 
 
-const mediaController = require( './controllers/mediaController' )
-const fs = require( 'fs' )
-const path = require( 'path' )
+const mediaController = require('./controllers/mediaController')
+const fs = require('fs')
+const path = require('path')
 
-const storage = multer.diskStorage( {
-  destination: function ( req, file, cb ) {
-    if ( fs.existsSync( 'public' ) ) {
-      fs.mkdirSync( 'public' );
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    if (fs.existsSync('public')) {
+      fs.mkdirSync('public');
     }
-    if ( fs.existsSync( 'public/videos' ) ) {
-      fs.mkdirSync( 'public/videos' )
+    if (fs.existsSync('public/videos')) {
+      fs.mkdirSync('public/videos')
     }
-    cb( null, "public/videos" );
+    cb(null, "public/videos");
   },
-  filename: function ( req, file, cb ) {
-    cb( null, Date.now() = file.originalname );
+  filename: function (req, file, cb) {
+    cb(null, Date.now() = file.originalname);
   },
-} );
+});
 
-const upload = multer( {
+const upload = multer({
   storage: storage,
-  fileFilter: function ( req, file, cb ) {
-    var ext = path.extname( file.originalname );
-    if ( ext !== '.mkv' && ext !== '.mp4' ) {
-      return cb( new Error( 'Only videos are allowed' ) )
+  fileFilter: function (req, file, cb) {
+    var ext = path.extname(file.originalname);
+    if (ext !== '.mkv' && ext !== '.mp4') {
+      return cb(new Error('Only videos are allowed'))
     }
-    cb( null, true );
+    cb(null, true);
   }
-} )
+})
 
 // mongoose connection
-mongoose.set( 'strictQuery', true );
-mongoose.connect( uri, {
+mongoose.set('strictQuery', true);
+mongoose.connect(uri, {
   useNewUrlParser: true,
-} );
-mongoose.connection.on( 'connected', () => {
-  console.log( 'Connected to mongodb' )
-} )
-mongoose.connection.on( 'error', ( err ) => {
-  console.log( 'error connecting to mongodb', err )
-} )
+});
+mongoose.connection.on('connected', () => {
+  console.log('Connected to mongodb')
+})
+mongoose.connection.on('error', (err) => {
+  console.log('error connecting to mongodb', err)
+})
 
 async function run() {
   try {
@@ -337,42 +337,42 @@ async function run() {
     })
 
 
-    
- // post video
- app.post( '/videos', upload.fields( [ { name: 'videos', maxCount: 5, } ] ), async ( req, res ) => {
-  const { name } = req.body;
-  let videosPath = [];
-  if ( Array.isArray( req.files.videos ) && req.files.videos.length > 0 ) {
-    for ( let video of req.files.videos ) {
-      videosPath.push( '/' + video.path )
-    }
-  }
-  try {
-    const createMedia = await Media.Create( {
-      name,
-      videos: videosPath
-    } )
-    res.json( { message: "Media created successfully", createMedia } )
-  } catch ( error ) {
-    console.log( error )
-    res.status( 400 ).json( error )
-  }
-} );
 
-// get video
-// app.get( "/videos", async ( req, res ) => {
-//   const video = await videoCollection.find( {} ).toArray()
-//   res.send( video );
-// } );
-app.get( '/videos', mediaController.getAll )
+    // post video
+    app.post('/videos', upload.fields([{ name: 'videos', maxCount: 5, }]), async (req, res) => {
+      const { name } = req.body;
+      let videosPath = [];
+      if (Array.isArray(req.files.videos) && req.files.videos.length > 0) {
+        for (let video of req.files.videos) {
+          videosPath.push('/' + video.path)
+        }
+      }
+      try {
+        const createMedia = await Media.Create({
+          name,
+          videos: videosPath
+        })
+        res.json({ message: "Media created successfully", createMedia })
+      } catch (error) {
+        console.log(error)
+        res.status(400).json(error)
+      }
+    });
 
-// getting a video by id
-app.get( "/videos/:id", async ( req, res ) => {
-  const id = req.params.id;
-  const filter = { _id: ObjectId( id ) }
-  const result = await videoCollection.findOne( filter );
-  res.send( result );
-} );
+    // get video
+    // app.get( "/videos", async ( req, res ) => {
+    //   const video = await videoCollection.find( {} ).toArray()
+    //   res.send( video );
+    // } );
+    app.get('/videos', mediaController.getAll)
+
+    // getting a video by id
+    app.get("/videos/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) }
+      const result = await videoCollection.findOne(filter);
+      res.send(result);
+    });
 
   } catch {
     (e) => {
