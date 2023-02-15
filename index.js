@@ -269,8 +269,6 @@ async function run() {
     app.get("/users/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
-      // console.log( email );
-      // console.log( query );
       const user = await usersCollection.findOne(query);
       // console.log( user )
       res.send(user);
@@ -283,19 +281,17 @@ async function run() {
     });
 
     // storing a new course
-    app.post("/add-course/:title/:desc/:instructor/:img/:price",
-      async (req, res) => {
-        const title = req.params.title;
-        const description = req.params.description;
-        const instructor = req.params.instructor;
-        const img = req.params.img;
-        const price = req.params.price;
-        const courseInfo = { title, desc: description, instructor, img, price };
+    app.post("/add-course",
+    async (req, res) => {
+        const courseInfo = req.body;
+        console.log(courseInfo);
         const result = await courseCollection.insertOne(courseInfo);
         // console.log(result);
         res.send(result)
       }
     );
+
+    // implementing multer for video upload
 
     const multer = require('multer');
     const path = require('path');
@@ -304,6 +300,9 @@ async function run() {
 
     const storage = multer.diskStorage({
       destination: (req, file, next) =>{
+        if(!fs.existsSync("uploads")){
+          fs.mkdirSync("uploads")
+        }
         next(null, './uploads');
       },
       filename: (req, file, next) =>{
@@ -337,24 +336,20 @@ async function run() {
       const { originalname} = req.file;
       // console.log( originalname, req.file);
       const videoInfo = {name: originalname};
-      
-      const result = await test.insertOne(videoInfo);
-      // res.status(200).send("upload success: ",result);
-      res.send(result);
+      const filter = {};
+      const query = {}      
+      // const result = await courseCollection.updateOne(filter, query)
+      // res.send(result);
     });
 
-    // getting video test
-    // app.get('/video', async(req,res)=>{
-      //   res.send(result)
-      // })
-      
+    // getting video - test
       app.get("/video/:id", async (req, res) => {
         const {id} = req.params;
         const result = await courseCollection.findOne({_id:ObjectId(id)});
 
         if(result)
         {
-          // console.log(result.name);
+          console.log(result.name);
         // Ensure there is a range given for the video
       const range = req.headers.range;
       if (!range) {
