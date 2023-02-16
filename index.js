@@ -284,9 +284,7 @@ async function run() {
     app.post("/add-course",
     async (req, res) => {
         const courseInfo = req.body;
-        console.log(courseInfo);
         const result = await courseCollection.insertOne(courseInfo);
-        // console.log(result);
         res.send(result)
       }
     );
