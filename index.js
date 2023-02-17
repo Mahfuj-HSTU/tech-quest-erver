@@ -88,6 +88,7 @@ async function run () {
     const applicationCollection = client.db( "techQuest" ).collection( "applications" );
     const jobSeekersCollection = client.db( "techQuest" ).collection( "jobSeekersCollection" );
     const courseCollection = client.db( "techQuest" ).collection( "courses" );
+    const coursePaymentCollection = client.db( "techQuest" ).collection( "coursePayment" );
     const videoCollection = client.db( "techQuest" ).collection( "videos" );
     const test = client.db( "techQuest" ).collection( "test" ); // created by jayem for testing
 
@@ -431,16 +432,24 @@ async function run () {
     // storing payment info including course details and buyer email
     app.post( "/courses/payment/:id/:email", async ( req, res ) => {
       const email = req.params.email;
-      const id = req.params.id;
-      const filter = { _id: ObjectId( id ) };
+      const course_id = req.params.id;
+      const filter = { _id: ObjectId( course_id ) };
       const courseInfo = await courseCollection.findOne( filter );
-      const courseInfoMore = { ...courseInfo, email };
+      const { title, videoUrl, description, instructor, img } = courseInfo;
+      const courseInfoMore = { title, videoUrl, description, instructor, img, course_id, email };
       const coursePayment = await coursePaymentCollection.insertOne(
         courseInfoMore
       );
       // console.log(courseInfoMore);
       res.send( coursePayment );
     } );
+
+    // getting all course payment data
+    app.get('/all-payment', async(req, res)=>{
+      const result = await coursePaymentCollection.find({}).toArray();
+      // console.log(result);
+      res.send(result);
+    })
 
     // delete a course from course collection by admin
     app.delete( "/delete-course/:id", async ( req, res ) => {
