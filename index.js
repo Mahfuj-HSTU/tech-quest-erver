@@ -275,6 +275,25 @@ async function run () {
       res.send( user );
     } );
 
+    // update user
+    app.put( '/users/:id', async ( req, res ) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId( id ) }
+      const user = req.body;
+      // console.log( user )
+      const option = { upsert: true }
+      const updatedUser = {
+        $set: {
+          name: user.name,
+          email: user.email,
+          institute: user.institute,
+          address: user.address
+        }
+      }
+      const result = await usersCollection.updateOne( query, updatedUser, option )
+      res.send( result )
+    } )
+
     // delete users
     app.delete( '/users/:id', async ( req, res ) => {
       const id = req.params.id;
