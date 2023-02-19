@@ -12,7 +12,7 @@ const { MongoClient, ServerApiVersion, ObjectId, CURSOR_FLAGS } = require( "mong
 app.use( cors() );
 app.use( express.json( { limit: "100mb" } ) );
 
-const uri = `mongodb+srv://${ process.env.DB_USER }:${ process.env.DB_PASS }@cluster0.pl2ayam.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pl2ayam.mongodb.net/?retryWrites=true&w=majority`;
 
 const client = new MongoClient( uri, {
   useNewUrlParser: true,
