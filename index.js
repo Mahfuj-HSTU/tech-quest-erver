@@ -97,6 +97,13 @@ async function run() {
       const jobPostDetails = req.body;
       const result = await allJobsCollection.insertOne(jobPostDetails);
       // console.log( result );
+      // const filter = { role: "jobSeeker" }
+      // const updateDoc = {
+      //   $set: {
+      //     notification: true
+      //   }
+      // }
+      // const updatedJobseeker = await usersCollection.updateMany(filter, updateDoc)
       res.send(result);
     });
 
