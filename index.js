@@ -86,6 +86,7 @@ async function run() {
     const allJobsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const applicationCollection = client.db("techQuest").collection("applications");
+    const savedJobCollection = client.db("techQuest").collection("savedJob");
     const jobSeekersCollection = client.db("techQuest").collection("jobSeekersCollection");
     const courseCollection = client.db("techQuest").collection("courses");
     const coursePaymentCollection = client.db("techQuest").collection("coursePayment");
@@ -141,12 +142,28 @@ async function run() {
     });
 
     // storing job seekers application
-    app.post("/applications", async (req, res) => {
+    app.post("/save-applications", async (req, res) => {
       const application = req.body;
-      // console.log(application);
+      console.log(application);
       const result = await applicationCollection.insertOne(application);
       // console.log(result);
       res.send(result);
+    });
+
+    // storing job bookmark
+    app.post('/save-job', async(req, res)=>{
+      const bookmark = req.body;
+      // console.log(bookmark);
+      const result = await savedJobCollection.insertOne(bookmark);
+      res.send(result)
+    });
+
+    // getting saved jobs
+    app.get('/saved-job', async(req, res)=>{
+      const bookmark = req.body;
+      // console.log(bookmark);
+      const result = await savedJobCollection.find(bookmark).toArray();
+      res.send(result)
     });
 
     // created a search query - it is not complete
@@ -199,13 +216,6 @@ async function run() {
       const filter = { _id: ObjectId(id) };
       const result = await recruiterJobPostsCollection.findOne(filter);
       //   console.log( result );
-      res.send(result);
-    });
-
-    // storing job seekers application
-    app.post("/applications", async (req, res) => {
-      const application = req.body;
-      const result = await applicationCollection.insertOne(application);
       res.send(result);
     });
 
@@ -308,7 +318,6 @@ async function run() {
       const result = await usersCollection.deleteOne(query);
       res.send(result)
     })
-
 
     // getting all application from db
     app.get("/applications", async (req, res) => {
