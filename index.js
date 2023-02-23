@@ -144,7 +144,7 @@ async function run() {
     // storing job seekers application
     app.post("/save-applications", async (req, res) => {
       const application = req.body;
-      console.log(application);
+      // console.log(application);
       const result = await applicationCollection.insertOne(application);
       // console.log(result);
       res.send(result);
