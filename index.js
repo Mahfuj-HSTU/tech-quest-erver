@@ -38,47 +38,48 @@ const client = new MongoClient(uri, {
 // }
 
 
-const mediaController = require( './controllers/mediaController' )
-const fs = require( 'fs' )
-const path = require( 'path' )
+const mediaController = require('./controllers/mediaController')
+const fs = require('fs')
+const path = require('path')
 
-const storage = multer.diskStorage( {
-  destination: function ( req, file, cb ) {
-    if ( fs.existsSync( 'public' ) ) {
-      fs.mkdirSync( 'public' );
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    if (fs.existsSync('public')) {
+      fs.mkdirSync('public');
     }
-    if ( fs.existsSync( 'public/videos' ) ) {
-      fs.mkdirSync( 'public/videos' )
+    if (fs.existsSync('public/videos')) {
+      fs.mkdirSync('public/videos')
     }
-    cb( null, "public/videos" );
+    cb(null, "public/videos");
   },
-  filename: function ( req, file, cb ) {
-    cb( null, Date.now() = file.originalname );
+  filename: function (req, file, cb) {
+    cb(null, Date.now() = file.originalname);
   },
-} );
+});
 
-const upload = multer( {
+const upload = multer({
   storage: storage,
-  fileFilter: function ( req, file, cb ) {
-    var ext = path.extname( file.originalname );
-    if ( ext !== '.mkv' && ext !== '.mp4' ) {
-      return cb( new Error( 'Only videos are allowed' ) )
+  fileFilter: function (req, file, cb) {
+    var ext = path.extname(file.originalname);
+    if (ext !== '.mkv' && ext !== '.mp4') {
+      return cb(new Error('Only videos are allowed'))
     }
-    cb( null, true );
+    cb(null, true);
   }
-} )
+})
 
 // mongoose connection
-mongoose.set( 'strictQuery', true );
-mongoose.connect( uri, {
+mongoose.set('strictQuery', true);
+mongoose.connect(uri, {
   useNewUrlParser: true,
-} );
-mongoose.connection.on( 'connected', () => {
-  console.log( 'Connected to mongodb' )
-} )
-mongoose.connection.on( 'error', ( err ) => {
-  console.log( 'error connecting to mongodb', err )
-} )
+});
+mongoose.connection.on('connected', () => {
+  console.log('Connected to mongodb')
+})
+mongoose.connection.on('error', (err) => {
+  console.log('error connecting to mongodb', err)
+})
+
 
 async function run() {
   try {
@@ -86,16 +87,25 @@ async function run() {
     const allJobsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const recruiterJobPostsCollection = client.db("techQuest").collection("recruiterJobPosts");
     const applicationCollection = client.db("techQuest").collection("applications");
+    const savedJobCollection = client.db("techQuest").collection("savedJob");
     const jobSeekersCollection = client.db("techQuest").collection("jobSeekersCollection");
     const courseCollection = client.db("techQuest").collection("courses");
+    const coursePaymentCollection = client.db("techQuest").collection("coursePayment");
     const videoCollection = client.db("techQuest").collection("videos");
     const test = client.db("techQuest").collection("test"); // created by jayem for testing
 
     // Create post method for add job section
-    app.post("/alljobs", async (req, res) => {
+    app.post("/all-jobs", async (req, res) => {
       const jobPostDetails = req.body;
       const result = await allJobsCollection.insertOne(jobPostDetails);
       // console.log( result );
+      // const filter = { role: "jobSeeker" }
+      // const updateDoc = {
+      //   $set: {
+      //     notification: true
+      //   }
+      // }
+      // const updatedJobseeker = await usersCollection.updateMany(filter, updateDoc)
       res.send(result);
     });
 
@@ -127,18 +137,43 @@ async function run() {
 
     // all job seekers
     app.get("/jobSeekersCollection", async (req, res) => {
-      const query = { role: "jobSeeker" };
+      const search = req.query.search;
+      let query = {role: "jobSeeker"};
+      if( search.length) {
+        query = {
+          $text : {
+            $search : search
+          }
+        }
+      }
+
       const result = await usersCollection.find(query).toArray();
       res.send(result);
     });
 
     // storing job seekers application
-    app.post("/applications", async (req, res) => {
+    app.post("/save-applications", async (req, res) => {
       const application = req.body;
-      // console.log(application);
+      console.log(application);
       const result = await applicationCollection.insertOne(application);
       // console.log(result);
       res.send(result);
+    });
+
+    // storing job bookmark
+    app.post('/save-job', async(req, res)=>{
+      const bookmark = req.body;
+      // console.log(bookmark);
+      const result = await savedJobCollection.insertOne(bookmark);
+      res.send(result)
+    });
+
+    // getting saved jobs
+    app.get('/saved-job', async(req, res)=>{
+      const bookmark = req.body;
+      // console.log(bookmark);
+      const result = await savedJobCollection.find(bookmark).toArray();
+      res.send(result)
     });
 
     // created a search query - it is not complete
@@ -191,13 +226,6 @@ async function run() {
       const filter = { _id: ObjectId(id) };
       const result = await recruiterJobPostsCollection.findOne(filter);
       //   console.log( result );
-      res.send(result);
-    });
-
-    // storing job seekers application
-    app.post("/applications", async (req, res) => {
-      const application = req.body;
-      const result = await applicationCollection.insertOne(application);
       res.send(result);
     });
 
@@ -269,12 +297,37 @@ async function run() {
     app.get("/users/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
-      // console.log( email );
-      // console.log( query );
       const user = await usersCollection.findOne(query);
       // console.log( user )
       res.send(user);
     });
+
+    // update user
+    app.put('/users/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) }
+      const user = req.body;
+      // console.log( user )
+      const option = { upsert: true }
+      const updatedUser = {
+        $set: {
+          name: user.name,
+          email: user.email,
+          institute: user.institute,
+          address: user.address
+        }
+      }
+      const result = await usersCollection.updateOne(query, updatedUser, option)
+      res.send(result)
+    })
+
+    // delete users
+    app.delete('/users/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await usersCollection.deleteOne(query);
+      res.send(result)
+    })
 
     // getting all application from db
     app.get("/applications", async (req, res) => {
@@ -283,19 +336,127 @@ async function run() {
     });
 
     // storing a new course
-    app.post("/add-course/:title/:desc/:instructor/:img/:price",
+    app.post("/add-course",
       async (req, res) => {
-        const title = req.params.title;
-        const description = req.params.description;
-        const instructor = req.params.instructor;
-        const img = req.params.img;
-        const price = req.params.price;
-        const courseInfo = { title, desc: description, instructor, img, price };
+        const courseInfo = req.body;
         const result = await courseCollection.insertOne(courseInfo);
-        // console.log(result);
         res.send(result)
       }
     );
+
+    // implementing multer for video upload
+
+    const multer = require('multer');
+    const path = require('path');
+
+    // const UPLOADS_FOLDER = './uploads/';
+
+    const storage = multer.diskStorage({
+      destination: (req, file, next) => {
+        if (!fs.existsSync("uploads")) {
+          fs.mkdirSync("uploads")
+        }
+        next(null, './uploads');
+      },
+      filename: (req, file, next) => {
+        // rename file
+        // const fileExt = path.extname(file.originalname);
+        // const fileName = file.originalname.replace(fileExt, "").toLowerCase().split(" ").join("-") + "-" + Date.now();
+        // next(null, fileName + fileExt);
+        next(null, file.originalname);
+      }
+    })
+
+    const upload = multer({
+      dest: './uploads',
+      limits: {
+        fileSize: 1000000000,
+      },
+      storage: storage,
+      fileFilter: (req, file, next) => {
+        // console.log(file);
+        if (file.mimetype === 'video/mp4') {
+          next(null, true)
+        }
+        else {
+          next(new Error("only mp4 is supported!!!"))
+        }
+      }
+    })
+
+    // adding video test
+    app.post('/upload/video', upload.single('video'), async (req, res) => {
+      const { originalname } = req.file;
+      // console.log( originalname, req.file);
+      const videoInfo = { name: originalname };
+      const filter = {};
+      const query = {}
+      // const result = await courseCollection.updateOne(filter, query)
+      // res.send(result);
+    });
+
+    // getting video - test
+    app.get("/video/:id", async (req, res) => {
+      const { id } = req.params;
+      const result = await courseCollection.findOne({ _id: ObjectId(id) });
+
+      if (result) {
+        console.log(result.name);
+        // Ensure there is a range given for the video
+        const range = req.headers.range;
+        if (!range) {
+          res.status(400).send("Requires Range header");
+        }
+
+        // get video stats (about 61MB)
+
+        // const videoPath = `./uploads/${result.name}`;
+        // const videoSize = fs.statSync(`./uploads/${result.name}`).size;
+
+        const video_name = result.video_name;
+
+        const videoPath = `./uploads/${video_name}`;
+        const videoSize = fs.statSync(`./uploads/${video_name}`).size;
+
+        // Parse Range
+        // Example: "bytes=32324-"
+        const CHUNK_SIZE = 10 ** 6; // 1MB
+        const start = Number(range.replace(/\D/g, ""));
+        const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
+
+        // Create headers
+        const contentLength = end - start + 1;
+        const headers = {
+          "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+          "Accept-Ranges": "bytes",
+          "Content-Length": contentLength,
+          "Content-Type": "video/mp4",
+        };
+
+        // HTTP Status 206 for Partial Content
+        res.writeHead(206, headers);
+
+        // create video read stream for this particular chunk
+        const videoStream = fs.createReadStream(videoPath, { start, end });
+
+        // Stream the video chunk to the client
+        videoStream.pipe(res);
+      }
+    });
+
+    app.use((err, req, res, next) => {
+      if (err) {
+        if (err instanceof multer.MulterError) {
+          res.status(500).send("There was an upload error!");
+        }
+        else {
+          res.status(500).send(err.message)
+        }
+      }
+      else {
+        res.send('success')
+      }
+    })
 
     // getting all courses
     app.get("/courses", async (req, res) => {
@@ -316,15 +477,46 @@ async function run() {
     // storing payment info including course details and buyer email
     app.post("/courses/payment/:id/:email", async (req, res) => {
       const email = req.params.email;
-      const id = req.params.id;
-      const filter = { _id: ObjectId(id) };
+      const course_id = req.params.id;
+      const filter = { _id: ObjectId(course_id) };
       const courseInfo = await courseCollection.findOne(filter);
-      const courseInfoMore = { ...courseInfo, email };
+      const { title, videoUrl, description, instructor, img } = courseInfo;
+      const courseInfoMore = { title, videoUrl, description, instructor, img, course_id, email };
       const coursePayment = await coursePaymentCollection.insertOne(
         courseInfoMore
       );
       // console.log(courseInfoMore);
       res.send(coursePayment);
+    });
+
+    // getting all course payment data
+    app.get('/all-payment', async (req, res) => {
+      const result = await coursePaymentCollection.find({}).toArray();
+      // console.log(result);
+      res.send(result);
+    })
+
+
+
+    // post video
+    app.post('/videos', upload.fields([{ name: 'videos', maxCount: 5, }]), async (req, res) => {
+      const { name } = req.body;
+      let videosPath = [];
+      if (Array.isArray(req.files.videos) && req.files.videos.length > 0) {
+        for (let video of req.files.videos) {
+          videosPath.push('/' + video.path)
+        }
+      }
+      try {
+        const createMedia = await Media.Create({
+          name,
+          videos: videosPath
+        })
+        res.json({ message: "Media created successfully", createMedia })
+      } catch (error) {
+        console.log(error)
+        res.status(400).json(error)
+      }
     });
 
     // delete a course from course collection by admin
@@ -337,42 +529,42 @@ async function run() {
     })
 
 
-    
- // post video
- app.post( '/videos', upload.fields( [ { name: 'videos', maxCount: 5, } ] ), async ( req, res ) => {
-  const { name } = req.body;
-  let videosPath = [];
-  if ( Array.isArray( req.files.videos ) && req.files.videos.length > 0 ) {
-    for ( let video of req.files.videos ) {
-      videosPath.push( '/' + video.path )
-    }
-  }
-  try {
-    const createMedia = await Media.Create( {
-      name,
-      videos: videosPath
-    } )
-    res.json( { message: "Media created successfully", createMedia } )
-  } catch ( error ) {
-    console.log( error )
-    res.status( 400 ).json( error )
-  }
-} );
 
-// get video
-// app.get( "/videos", async ( req, res ) => {
-//   const video = await videoCollection.find( {} ).toArray()
-//   res.send( video );
-// } );
-app.get( '/videos', mediaController.getAll )
+    // post video
+    app.post('/videos', upload.fields([{ name: 'videos', maxCount: 5, }]), async (req, res) => {
+      const { name } = req.body;
+      let videosPath = [];
+      if (Array.isArray(req.files) && req.files.length > 0) {
+        for (let video of req.files) {
+          videosPath.push('/' + video.path)
+        }
+      }
+      try {
+        const createMedia = await Media.Create({
+          name,
+          videos: videosPath
+        })
+        res.json({ message: "Media created successfully", createMedia })
+      } catch (error) {
+        console.log(error)
+        res.status(400).json(error)
+      }
+    });
 
-// getting a video by id
-app.get( "/videos/:id", async ( req, res ) => {
-  const id = req.params.id;
-  const filter = { _id: ObjectId( id ) }
-  const result = await videoCollection.findOne( filter );
-  res.send( result );
-} );
+    // get video
+    // app.get( "/videos", async ( req, res ) => {
+    //   const video = await videoCollection.find( {} ).toArray()
+    //   res.send( video );
+    // } );
+    app.get('/videos', mediaController.getAll)
+
+    // getting a video by id
+    app.get("/videos/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) }
+      const result = await videoCollection.findOne(filter);
+      res.send(result);
+    });
 
   } catch {
     (e) => {
