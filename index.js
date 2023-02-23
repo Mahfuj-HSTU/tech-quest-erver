@@ -152,9 +152,9 @@ async function run() {
     });
 
     // storing job seekers application
-    app.post("/applications", async (req, res) => {
+    app.post("/save-applications", async (req, res) => {
       const application = req.body;
-      // console.log(application);
+      console.log(application);
       const result = await applicationCollection.insertOne(application);
       // console.log(result);
       res.send(result);
@@ -226,13 +226,6 @@ async function run() {
       const filter = { _id: ObjectId(id) };
       const result = await recruiterJobPostsCollection.findOne(filter);
       //   console.log( result );
-      res.send(result);
-    });
-
-    // storing job seekers application
-    app.post("/applications", async (req, res) => {
-      const application = req.body;
-      const result = await applicationCollection.insertOne(application);
       res.send(result);
     });
 
@@ -335,7 +328,6 @@ async function run() {
       const result = await usersCollection.deleteOne(query);
       res.send(result)
     })
-
 
     // getting all application from db
     app.get("/applications", async (req, res) => {
