@@ -80,6 +80,7 @@ mongoose.connection.on('error', (err) => {
   console.log('error connecting to mongodb', err)
 })
 
+
 async function run() {
   try {
     const usersCollection = client.db("techQuest").collection("users");
@@ -136,7 +137,16 @@ async function run() {
 
     // all job seekers
     app.get("/jobSeekersCollection", async (req, res) => {
-      const query = { role: "jobSeeker" };
+      const search = req.query.search;
+      let query = {role: "jobSeeker"};
+      if( search.length) {
+        query = {
+          $text : {
+            $search : search
+          }
+        }
+      }
+
       const result = await usersCollection.find(query).toArray();
       res.send(result);
     });

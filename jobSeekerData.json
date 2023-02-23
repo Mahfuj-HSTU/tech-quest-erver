@@ -1,0 +1,37 @@
+[
+    {
+      "name": "Asif Mahmud",
+      "email": "csejayem19@gmail.com",
+      "photoUrl": "https://i.pinimg.com/564x/47/3a/17/473a173f170c74bd4954583e756944a9.jpg",
+      "title": "UI/UX Designer",
+      "institute": "National University",
+      "skills": "React, Node.js, Express.js, MongoDB, Redux, Tailwind, Figma",
+      "address": "Dhaka",
+      "experience": "2 years",
+      "role" : "jobSeeker"
+    },
+    {
+      "name": "Mahmud Asif",
+      "email": "csejayem19@gmail.com",
+      "photoUrl": "https://i.pinimg.com/564x/47/3a/17/473a173f170c74bd4954583e756944a9.jpg",
+      "title": "Game Developer",
+      "institute": "National University",
+      "skills": "React, Node.js, Express.js, MongoDB, Redux, Tailwind, Python, Java , C#",
+      "address": "Barishal",
+      "experience": "1 year",
+      "role" : "jobSeeker"
+    },
+    {
+      "name": "Mahmud Asif",
+      "email": "csejayem19@gmail.com",
+      "photoUrl": "https://i.pinimg.com/564x/47/3a/17/473a173f170c74bd4954583e756944a9.jpg",
+      "title": "Back End Engineer",
+      "institute": "National University",
+      "skills": "React, Node.js, Express.js, MongoDB, Redux, MySQL, PostgreSQL",
+      "address": "Rajbari",
+      "experience": "No Experience",
+      "role" : "jobSeeker"
+    }
+    
+    
+  ]
