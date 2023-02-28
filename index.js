@@ -329,6 +329,18 @@ async function run() {
       res.send(result)
     })
 
+    // deleting myjob from db
+
+    app.delete('/applications/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      console.log(query);
+      const result = await applicationCollection.deleteOne(query);
+      console.log(result,'this is a rule')
+      res.send(result)
+    })
+
+
     // getting all application from db
     app.get("/applications", async (req, res) => {
       const result = await applicationCollection.find({}).toArray();
