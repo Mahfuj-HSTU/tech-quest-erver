@@ -326,9 +326,7 @@ async function run() {
     app.delete('/applications/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      console.log(query);
       const result = await applicationCollection.deleteOne(query);
-      console.log(result,'this is a rule')
       res.send(result)
     })
 
