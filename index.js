@@ -118,17 +118,9 @@ async function run() {
       res.send(result);
     });
 
-    // my jobs
+    // getting jobs which is applied by candidate
     app.get("/myjobs", async (req, res) => {
       const email = req.query.email;
-      const decodedEmail = req.decoded.email;
-      console.log(decodedEmail, email);
-      console.log(typeof decodedEmail, typeof email);
-
-      // if (email !== decodedEmail) {
-      //   return res.status(403).send({ message: "forbiden access" });
-      // }
-
       const query = { email: email };
       const jobs = await applicationCollection.find(query).toArray();
       // console.log( result );
