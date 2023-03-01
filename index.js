@@ -211,6 +211,23 @@ async function run() {
       res.send(result);
     });
 
+    // Updated Job posts
+    app.put('/recruiterJobPosts/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) }
+      const singleJob = await recruiterJobPostsCollection.find(query).toArray();
+      const allow=singleJob[0].allow
+      // console.log( !allow )
+      const option = { upsert: true }
+      const updatedJobPost = {
+        $set: {
+          allow: !allow
+        }
+      }
+      const result = await recruiterJobPostsCollection.updateOne(query, updatedJobPost, option)
+      res.send(result)
+    })
+
     // getting a specific job
     app.get("/job-details/:id", async (req, res) => {
       const id = req.params.id;
